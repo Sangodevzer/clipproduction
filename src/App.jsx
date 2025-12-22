@@ -85,15 +85,15 @@ const LoginScreen = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-studio-darker via-studio-dark to-studio-darker flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
-          <div className="flex flex-col items-center mb-8">
-            <div className="bg-studio-accent p-4 rounded-full mb-4">
-              <Lock className="w-8 h-8 text-white" />
+        <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-2xl p-6 border border-white/20">
+          <div className="flex flex-col items-center mb-6">
+            <div className="bg-studio-accent p-3 rounded-full mb-3">
+              <Lock className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-bold sci-fi-title mb-2" data-text="JEUNE PATRON PRODUCTION">
+            <h1 className="text-2xl font-bold sci-fi-title mb-1" data-text="JEUNE PATRON PRODUCTION">
               Jeune Patron Production
             </h1>
-            <p className="text-gray-300 text-center">Gestion de Production de Clips</p>
+            <p className="text-gray-300 text-center text-sm">Gestion de Production de Clips</p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -334,17 +334,17 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
   return (
     <div 
       ref={setNodeRef}
-      className={`flex-shrink-0 w-80 bg-white/5 backdrop-blur-sm rounded-lg p-4 border-2 transition-all ${
+      className={`flex-shrink-0 w-72 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
         isOver ? 'border-studio-accent bg-studio-accent/10 scale-105' : 'border-white/10'
       }`}
     >
-      <div className="mb-4">
-        <div className="text-studio-accent-light text-sm font-medium">{dayName}</div>
-        <div className="text-white text-2xl font-bold">{dayNumber} {monthName}</div>
+      <div className="mb-3">
+        <div className="text-studio-accent-light text-xs font-medium">{dayName}</div>
+        <div className="text-white text-xl font-bold">{dayNumber} {monthName}</div>
       </div>
       
       <SortableContext items={cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-2 mb-4 min-h-[200px]">
+        <div className="space-y-2 mb-3 min-h-[150px]">
           {cards.map((card) => (
             <DraggableCard key={card.id} card={card} onEdit={onEditCard} onDelete={onDeleteCard} />
           ))}
@@ -1338,7 +1338,7 @@ const Dashboard = ({ onLogout }) => {
       ) : (
         <>
       {/* Header */}
-      <header className="bg-studio-darker/80 backdrop-blur-lg border-b border-white/10 px-4 lg:px-6 py-4">
+      <header className="bg-studio-darker/80 backdrop-blur-lg border-b border-white/10 px-4 lg:px-6 py-2.5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -1348,8 +1348,8 @@ const Dashboard = ({ onLogout }) => {
               <Menu className="w-6 h-6" />
             </button>
             <div className="flex items-center gap-2">
-              <Calendar className="w-6 h-6 text-studio-accent" />
-              <h1 className="text-xl lg:text-2xl font-bold sci-fi-title" data-text="JEUNE PATRON PRODUCTION">
+              <Calendar className="w-5 h-5 text-studio-accent" />
+              <h1 className="text-lg lg:text-xl font-bold sci-fi-title" data-text="JEUNE PATRON PRODUCTION">
                 Jeune Patron Production
               </h1>
             </div>
@@ -1357,7 +1357,7 @@ const Dashboard = ({ onLogout }) => {
             <div className="hidden lg:flex items-center gap-2 ml-8">
               <button
                 onClick={() => setCurrentView('planning')}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-3 py-1.5 rounded-lg transition-colors text-sm ${
                   currentView === 'planning' 
                     ? 'bg-studio-accent text-white' 
                     : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'
@@ -1368,7 +1368,7 @@ const Dashboard = ({ onLogout }) => {
               </button>
               <button
                 onClick={() => setCurrentView('scouting')}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-3 py-1.5 rounded-lg transition-colors text-sm ${
                   currentView === 'scouting' 
                     ? 'bg-studio-accent text-white' 
                     : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'
@@ -1444,7 +1444,7 @@ const Dashboard = ({ onLogout }) => {
 
       {/* Date Configuration Panel */}
       {showDateConfig && (
-        <div className="bg-studio-darker/95 backdrop-blur-lg border-b border-white/10 px-6 py-4">
+        <div className="bg-studio-darker/95 backdrop-blur-lg border-b border-white/10 px-6 py-3">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <label className="text-sm text-gray-300">Date de début :</label>
@@ -1491,12 +1491,12 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content Area */}
         {currentView === 'planning' ? (
-          <main className="flex-1 overflow-x-auto overflow-y-hidden p-4 lg:p-6">
-            <div className="mb-4">
+          <main className="flex-1 overflow-x-auto overflow-y-hidden p-3 lg:p-4">
+            <div className="mb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Planning</h2>
-                  <p className="text-gray-400">Glissez-déposez les tâches entre les jours</p>
+                  <h2 className="text-xl font-bold text-white mb-1">Planning</h2>
+                  <p className="text-gray-400 text-sm">Glissez-déposez les tâches entre les jours</p>
                 </div>
                 <button
                   onClick={() => setShowDateConfig(!showDateConfig)}
