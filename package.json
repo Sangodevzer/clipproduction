@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:server": "NODE_ENV=development node server.js",
+    "dev:server": "NODE_ENV=development node server.cjs",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node server.cjs"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",

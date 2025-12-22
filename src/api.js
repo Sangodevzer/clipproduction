@@ -100,5 +100,67 @@ export const api = {
       body: JSON.stringify({ value })
     });
     return response.json();
+  },
+
+  // Budget Expenses
+  async getBudgetExpenses() {
+    const response = await fetch(`${API_URL}/api/budget/expenses`);
+    return response.json();
+  },
+
+  async createBudgetExpense(expense) {
+    const response = await fetch(`${API_URL}/api/budget/expenses`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(expense)
+    });
+    return response.json();
+  },
+
+  async updateBudgetExpense(id, expense) {
+    const response = await fetch(`${API_URL}/api/budget/expenses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(expense)
+    });
+    return response.json();
+  },
+
+  async deleteBudgetExpense(id) {
+    const response = await fetch(`${API_URL}/api/budget/expenses/${id}`, {
+      method: 'DELETE'
+    });
+    return response.json();
+  },
+
+  // Scouting Photos
+  async getScoutingPhotos() {
+    const response = await fetch(`${API_URL}/api/scouting/photos`);
+    return response.json();
+  },
+
+  async createScoutingPhoto(photo) {
+    const response = await fetch(`${API_URL}/api/scouting/photos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(photo)
+    });
+    return response.json();
+  },
+
+  async updateScoutingPhoto(id, photo) {
+    const response = await fetch(`${API_URL}/api/scouting/photos/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(photo)
+    });
+    return response.json();
+  },
+
+  async deleteScoutingPhoto(id) {
+    const response = await fetch(`${API_URL}/api/scouting/photos/${id}`, {
+      method: 'DELETE'
+    });
+    return response.json();
   }
 };

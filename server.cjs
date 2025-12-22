@@ -60,6 +60,25 @@ const initDB = async () => {
         key TEXT PRIMARY KEY,
         value TEXT NOT NULL
       );
+
+      CREATE TABLE IF NOT EXISTS budget_expenses (
+        id TEXT PRIMARY KEY,
+        category TEXT NOT NULL,
+        description TEXT NOT NULL,
+        amount DECIMAL(10, 2) NOT NULL,
+        date TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS scouting_photos (
+        id TEXT PRIMARY KEY,
+        image_data TEXT NOT NULL,
+        location TEXT,
+        description TEXT,
+        scene_number TEXT,
+        upload_date TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
     `);
     console.log('Database initialized');
   } catch (err) {
@@ -245,6 +264,123 @@ app.post('/api/settings/:key', async (req, res) => {
       'INSERT INTO settings (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = $2',
       [key, value]
     );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Budget Expenses
+app.get('/api/budget/expenses', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM budget_expenses ORDER BY date DESC, created_at DESC');
+    const expenses = result.rows.map(row => ({
+      id: row.id,
+      category: row.category,
+      description: row.description,
+      amount: parseFloat(row.amount),
+      date: row.date
+    }));
+    res.json(expenses);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/api/budget/expenses', async (req, res) => {
+  const { id, category, description, amount, date } = req.body;
+  try {
+    await pool.query(
+      'INSERT INTO budget_expenses (id, category, description, amount, date) VALUES ($1, $2, $3, $4, $5)',
+      [id, category, description, amount, date]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.put('/api/budget/expenses/:id', async (req, res) => {
+  const { id } = req.params;
+  const { category, description, amount, date } = req.body;
+  try {
+    await pool.query(
+      'UPDATE budget_expenses SET category = $1, description = $2, amount = $3, date = $4 WHERE id = $5',
+      [category, description, amount, date, id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.delete('/api/budget/expenses/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM budget_expenses WHERE id = $1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Scouting Photos
+app.get('/api/scouting/photos', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM scouting_photos ORDER BY upload_date DESC, created_at DESC');
+    const photos = result.rows.map(row => ({
+      id: row.id,
+      imageData: row.image_data,
+      location: row.location,
+      description: row.description,
+      sceneNumber: row.scene_number,
+      uploadDate: row.upload_date
+    }));
+    res.json(photos);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/api/scouting/photos', async (req, res) => {
+  const { id, imageData, location, description, sceneNumber, uploadDate } = req.body;
+  try {
+    await pool.query(
+      'INSERT INTO scouting_photos (id, image_data, location, description, scene_number, upload_date) VALUES ($1, $2, $3, $4, $5, $6)',
+      [id, imageData, location, description, sceneNumber, uploadDate]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.put('/api/scouting/photos/:id', async (req, res) => {
+  const { id } = req.params;
+  const { imageData, location, description, sceneNumber, uploadDate } = req.body;
+  try {
+    await pool.query(
+      'UPDATE scouting_photos SET image_data = $1, location = $2, description = $3, scene_number = $4, upload_date = $5 WHERE id = $6',
+      [imageData, location, description, sceneNumber, uploadDate, id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.delete('/api/scouting/photos/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query('DELETE FROM scouting_photos WHERE id = $1', [id]);
     res.json({ success: true });
   } catch (err) {
     console.error(err);
