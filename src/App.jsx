@@ -334,17 +334,17 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
   return (
     <div 
       ref={setNodeRef}
-      className={`flex-shrink-0 w-64 bg-white/5 backdrop-blur-sm rounded-lg p-2.5 border-2 transition-all ${
+      className={`flex-shrink-0 w-72 bg-white/5 backdrop-blur-sm rounded-lg p-4 border-2 transition-all ${
         isOver ? 'border-studio-accent bg-studio-accent/10 scale-105' : 'border-white/10'
       }`}
     >
-      <div className="mb-2">
+      <div className="mb-3">
         <div className="text-studio-accent-light text-xs font-medium">{dayName}</div>
-        <div className="text-white text-lg font-bold">{dayNumber} {monthName}</div>
+        <div className="text-white text-xl font-bold">{dayNumber} {monthName}</div>
       </div>
       
       <SortableContext items={cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-1.5 mb-2 min-h-[100px]">
+        <div className="space-y-2 mb-3 min-h-[150px]">
           {cards.map((card) => (
             <DraggableCard key={card.id} card={card} onEdit={onEditCard} onDelete={onDeleteCard} />
           ))}
@@ -383,8 +383,8 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
     <div className={`
       fixed lg:relative inset-y-0 left-0 z-40 bg-studio-dark border-r border-white/10
       transform transition-all duration-300 ease-in-out
-      ${isOpen ? 'translate-x-0' : '-translate-x-full lg:-translate-x-full lg:hidden'}
-      ${isMinimized ? 'w-16' : 'w-80'}
+      ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      ${isMinimized ? 'w-16' : 'w-72'}
     `}>
       {isMinimized ? (
         <div className="h-full flex flex-col items-center py-6 gap-4">
@@ -478,8 +478,8 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
     <div className={`
       fixed lg:relative inset-y-0 right-0 z-40 bg-studio-dark border-l border-white/10
       transform transition-all duration-300 ease-in-out
-      ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-full lg:hidden'}
-      ${isMinimized ? 'w-16' : 'w-80'}
+      ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+      ${isMinimized ? 'w-16' : 'w-72'}
     `}>
       {isMinimized ? (
         <div className="h-full flex flex-col items-center py-6 gap-4">
@@ -891,8 +891,8 @@ const BudgetSidebar = ({ budgetData, onUpdateBudget, onAddExpense, onDeleteExpen
     <div className={`
       fixed lg:relative bottom-0 lg:inset-y-0 left-0 lg:left-auto right-0 lg:right-0 z-40 bg-studio-dark border-t lg:border-t-0 lg:border-l border-white/10
       transform transition-all duration-300 ease-in-out
-      ${isOpen ? 'translate-y-0 lg:translate-x-0' : 'translate-y-full lg:translate-y-0 lg:hidden'}
-      h-[70vh] lg:h-auto lg:w-80
+      ${isOpen ? 'translate-y-0 lg:translate-x-0' : 'translate-y-full lg:translate-x-0'}
+      h-[70vh] lg:h-auto lg:w-72
     `}>
       <div className="h-full flex flex-col p-6 overflow-hidden">
         <div className="flex items-center justify-between mb-6">
@@ -1491,7 +1491,7 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content Area */}
         {currentView === 'planning' ? (
-          <main className="flex-1 overflow-x-auto overflow-y-hidden p-2 lg:p-3">
+          <main className="flex-1 overflow-x-auto overflow-y-hidden p-4">
             <div className="mb-3">
               <div className="flex items-center justify-between">
                 <div>
@@ -1514,7 +1514,7 @@ const Dashboard = ({ onLogout }) => {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex gap-3 pb-3">
+            <div className="flex gap-4 pb-4">
               {dates.map((date) => {
                 const dayCards = getCardsForDate(date);
                 return (
