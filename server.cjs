@@ -76,6 +76,8 @@ const initDB = async () => {
         location TEXT,
         description TEXT,
         scene_number TEXT,
+        category TEXT DEFAULT 'Autres',
+        media_type TEXT DEFAULT 'image',
         upload_date TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT NOW()
       );
@@ -339,6 +341,8 @@ app.get('/api/scouting/photos', async (req, res) => {
       location: row.location,
       description: row.description,
       sceneNumber: row.scene_number,
+      category: row.category,
+      mediaType: row.media_type,
       uploadDate: row.upload_date
     }));
     res.json(photos);
@@ -349,11 +353,11 @@ app.get('/api/scouting/photos', async (req, res) => {
 });
 
 app.post('/api/scouting/photos', async (req, res) => {
-  const { id, imageData, location, description, sceneNumber, uploadDate } = req.body;
+  const { id, imageData, location, description, sceneNumber, category, mediaType, uploadDate } = req.body;
   try {
     await pool.query(
-      'INSERT INTO scouting_photos (id, image_data, location, description, scene_number, upload_date) VALUES ($1, $2, $3, $4, $5, $6)',
-      [id, imageData, location, description, sceneNumber, uploadDate]
+      'INSERT INTO scouting_photos (id, image_data, location, description, scene_number, category, media_type, upload_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+      [id, imageData, location, description, sceneNumber, category || 'Autres', mediaType || 'image', uploadDate]
     );
     res.json({ success: true });
   } catch (err) {
@@ -364,11 +368,11 @@ app.post('/api/scouting/photos', async (req, res) => {
 
 app.put('/api/scouting/photos/:id', async (req, res) => {
   const { id } = req.params;
-  const { imageData, location, description, sceneNumber, uploadDate } = req.body;
+  const { imageData, location, description, sceneNumber, category, mediaType, uploadDate } = req.body;
   try {
     await pool.query(
-      'UPDATE scouting_photos SET image_data = $1, location = $2, description = $3, scene_number = $4, upload_date = $5 WHERE id = $6',
-      [imageData, location, description, sceneNumber, uploadDate, id]
+      'UPDATE scouting_photos SET image_data = $1, location = $2, description = $3, scene_number = $4, category = $5, media_type = $6, upload_date = $7 WHERE id = $8',
+      [imageData, location, description, sceneNumber, category || 'Autres', mediaType || 'image', uploadDate, id]
     );
     res.json({ success: true });
   } catch (err) {

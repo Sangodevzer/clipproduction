@@ -568,7 +568,11 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
   const [uploading, setUploading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [editingPhoto, setEditingPhoto] = useState(null);
-  const [editForm, setEditForm] = useState({ location: '', description: '', sceneNumber: '' });
+  const [categories, setCategories] = useState(['Extérieur', 'Intérieur', 'Décor', 'Autres']);
+  const [selectedCategory, setSelectedCategory] = useState('Tous');
+  const [newCategory, setNewCategory] = useState('');
+  const [showCategoryInput, setShowCategoryInput] = useState(false);
+  const [editForm, setEditForm] = useState({ location: '', description: '', sceneNumber: '', category: 'Autres' });
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -577,7 +581,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     setUploading(true);
     
     for (const file of files) {
-      if (!file.type.startsWith('image/')) continue;
+      if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) continue;
 
       const reader = new FileReader();
       reader.onload = async (event) => {
@@ -587,6 +591,8 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
           location: '',
           description: '',
           sceneNumber: '',
+          category: 'Autres',
+          mediaType: file.type.startsWith('video/') ? 'video' : 'image',
           uploadDate: new Date().toISOString()
         };
         await onAddPhoto(newPhoto);
@@ -603,7 +609,8 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     setEditForm({
       location: photo.location || '',
       description: photo.description || '',
-      sceneNumber: photo.sceneNumber || ''
+      sceneNumber: photo.sceneNumber || '',
+      category: photo.category || 'Autres'
     });
   };
 
@@ -615,6 +622,18 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     }
   };
 
+  const addCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      setCategories([...categories, newCategory.trim()]);
+      setNewCategory('');
+      setShowCategoryInput(false);
+    }
+  };
+
+  const filteredPhotos = selectedCategory === 'Tous' 
+    ? photos 
+    : photos.filter(p => (p.category || 'Autres') === selectedCategory);
+
   return (
     <div className="flex-1 overflow-y-auto p-4 lg:p-6">
       <div className="max-w-7xl mx-auto">
@@ -622,35 +641,97 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-3xl font-bold text-white mb-2">Repérages</h2>
-              <p className="text-gray-400">Photos des lieux de tournage</p>
+              <p className="text-gray-400">Photos et vidéos des lieux de tournage</p>
             </div>
             <label className="bg-studio-accent hover:bg-studio-accent-light text-white px-6 py-3 rounded-lg cursor-pointer flex items-center gap-2 transition-all transform hover:scale-105 active:scale-95">
               <Upload className="w-5 h-5" />
-              {uploading ? 'Upload...' : 'Ajouter des photos'}
+              {uploading ? 'Upload...' : 'Ajouter photos/vidéos'}
               <input
                 type="file"
                 multiple
-                accept="image/*"
+                accept="image/*,video/*"
                 onChange={handleFileUpload}
                 className="hidden"
                 disabled={uploading}
               />
             </label>
           </div>
+
+          {/* Categories */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={() => setSelectedCategory('Tous')}
+              className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                selectedCategory === 'Tous'
+                  ? 'bg-studio-accent text-white'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              Tous ({photos.length})
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-studio-accent text-white'
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                }`}
+              >
+                {cat} ({photos.filter(p => (p.category || 'Autres') === cat).length})
+              </button>
+            ))}
+            {showCategoryInput ? (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addCategory()}
+                  placeholder="Nouvelle catégorie..."
+                  className="bg-white/5 border border-white/20 rounded px-2 py-1 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-studio-accent"
+                  autoFocus
+                />
+                <button
+                  onClick={addCategory}
+                  className="bg-studio-accent hover:bg-studio-accent-light text-white px-3 py-1 rounded text-sm"
+                >
+                  OK
+                </button>
+                <button
+                  onClick={() => { setShowCategoryInput(false); setNewCategory(''); }}
+                  className="bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded text-sm"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowCategoryInput(true)}
+                className="px-3 py-1.5 rounded-lg text-sm bg-white/10 text-gray-300 hover:bg-white/20 transition-all flex items-center gap-1"
+              >
+                <Plus className="w-4 h-4" />
+                Nouvelle catégorie
+              </button>
+            )}
+          </div>
         </div>
 
-        {photos.length === 0 ? (
+        {filteredPhotos.length === 0 ? (
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-12 border border-white/20 text-center">
             <Camera className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">Aucune photo de repérage</h3>
-            <p className="text-gray-400 mb-6">Commencez par ajouter des photos des lieux de tournage</p>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              {selectedCategory === 'Tous' ? 'Aucune photo de repérage' : `Aucun média dans "${selectedCategory}"`}
+            </h3>
+            <p className="text-gray-400 mb-6">Commencez par ajouter des photos ou vidéos des lieux de tournage</p>
             <label className="inline-flex items-center gap-2 bg-studio-accent hover:bg-studio-accent-light text-white px-6 py-3 rounded-lg cursor-pointer transition-colors">
               <Upload className="w-5 h-5" />
-              Ajouter des photos
+              Ajouter photos/vidéos
               <input
                 type="file"
                 multiple
-                accept="image/*"
+                accept="image/*,video/*"
                 onChange={handleFileUpload}
                 className="hidden"
               />
@@ -658,14 +739,27 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {photos.map((photo) => (
+            {filteredPhotos.map((photo) => (
               <div key={photo.id} className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 hover:border-studio-accent/50 transition-all group">
                 <div className="relative aspect-video bg-black/50 cursor-pointer" onClick={() => setSelectedPhoto(photo)}>
-                  <img 
-                    src={photo.imageData} 
-                    alt={photo.location || 'Repérage'}
-                    className="w-full h-full object-cover"
-                  />
+                  {photo.mediaType === 'video' ? (
+                    <>
+                      <video 
+                        src={photo.imageData} 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                        <Camera className="w-3 h-3" />
+                        Vidéo
+                      </div>
+                    </>
+                  ) : (
+                    <img 
+                      src={photo.imageData} 
+                      alt={photo.location || 'Repérage'}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <ZoomIn className="w-8 h-8 text-white" />
                   </div>
@@ -693,6 +787,15 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
                       placeholder="Description..."
                       className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent min-h-[60px]"
                     />
+                    <select
+                      value={editForm.category}
+                      onChange={(e) => setEditForm({...editForm, category: e.target.value})}
+                      className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
+                    >
+                      {categories.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
                     <div className="flex gap-2">
                       <button
                         onClick={saveEdit}
@@ -761,13 +864,22 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
                 >
                   <X className="w-8 h-8" />
                 </button>
-                <img 
-                  src={selectedPhoto.imageData} 
-                  alt={selectedPhoto.location || 'Repérage'}
-                  className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                {(selectedPhoto.location || selectedPhoto.description) && (
+                {selectedPhoto.mediaType === 'video' ? (
+                  <video 
+                    src={selectedPhoto.imageData} 
+                    controls
+                    className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                ) : (
+                  <img 
+                    src={selectedPhoto.imageData} 
+                    alt={selectedPhoto.location || 'Repérage'}
+                    className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                )}
+                {(selectedPhoto.location || selectedPhoto.description || selectedPhoto.category) && (
                   <div className="mt-4 bg-white/10 backdrop-blur-lg rounded-lg p-4" onClick={(e) => e.stopPropagation()}>
                     {selectedPhoto.sceneNumber && (
                       <div className="text-studio-accent-light font-semibold mb-2">
@@ -782,6 +894,11 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
                     )}
                     {selectedPhoto.description && (
                       <p className="text-gray-300">{selectedPhoto.description}</p>
+                    )}
+                    {selectedPhoto.category && (
+                      <div className="mt-2 inline-block bg-studio-accent/20 text-studio-accent-light px-3 py-1 rounded-full text-sm">
+                        {selectedPhoto.category}
+                      </div>
                     )}
                   </div>
                 )}
