@@ -334,7 +334,7 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
   return (
     <div 
       ref={setNodeRef}
-      className={`flex-shrink-0 w-56 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
+      className={`flex-shrink-0 w-80 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
         isOver ? 'border-studio-accent bg-studio-accent/10 scale-105' : 'border-white/10'
       }`}
     >
@@ -387,17 +387,14 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
       ${isMinimized ? 'w-12' : 'w-64'}
     `}>
       {isMinimized ? (
-        <div className="h-full flex flex-col items-center py-6 gap-4">
+        <div className="h-full flex items-center justify-center">
           <button
             onClick={() => setIsMinimized(false)}
             className="text-studio-accent hover:text-studio-accent-light transition-colors p-2 rounded-lg hover:bg-white/10"
-            title="Agrandir"
+            title="Ouvrir Besoins"
           >
-            <Package className="w-6 h-6" />
+            <Package className="w-5 h-5" />
           </button>
-          <div className="text-white text-xs writing-mode-vertical transform rotate-180">
-            Besoins ({needs.length})
-          </div>
         </div>
       ) : (
         <div className="h-full flex flex-col p-6">
@@ -482,17 +479,14 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
       ${isMinimized ? 'w-12' : 'w-64'}
     `}>
       {isMinimized ? (
-        <div className="h-full flex flex-col items-center py-6 gap-4">
+        <div className="h-full flex items-center justify-center">
           <button
             onClick={() => setIsMinimized(false)}
             className="text-studio-accent hover:text-studio-accent-light transition-colors p-2 rounded-lg hover:bg-white/10"
-            title="Agrandir"
+            title="Ouvrir To-Do"
           >
-            <CheckSquare className="w-6 h-6" />
+            <CheckSquare className="w-5 h-5" />
           </button>
-          <div className="text-white text-xs writing-mode-vertical transform rotate-180">
-            To-Do ({todos.filter(t => !t.completed).length}/{todos.length})
-          </div>
         </div>
       ) : (
         <div className="h-full flex flex-col p-6">
@@ -889,16 +883,16 @@ const BudgetSidebar = ({ budgetData, onUpdateBudget, onAddExpense, onDeleteExpen
 
   return (
     <div className={`
-      fixed lg:relative bottom-0 lg:inset-y-0 left-0 lg:left-auto right-0 lg:right-0 z-40 bg-studio-dark border-t lg:border-t-0 lg:border-l border-white/10
+      fixed bottom-0 left-0 right-0 z-40 bg-studio-dark border-t border-white/10
       transform transition-all duration-300 ease-in-out
-      ${isOpen ? 'translate-y-0 lg:translate-x-0' : 'translate-y-full lg:translate-x-0'}
-      h-[70vh] lg:h-auto lg:w-72
+      ${isOpen ? 'translate-y-0' : 'translate-y-full'}
+      h-[70vh] lg:h-[50vh] max-h-[600px]
     `}>
-      <div className="h-full flex flex-col p-6 overflow-hidden">
-        <div className="flex items-center justify-between mb-6">
+      <div className="h-full flex flex-col p-4 overflow-hidden">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <DollarSign className="w-6 h-6 text-studio-accent" />
-            <h2 className="text-xl font-bold text-white">Budget</h2>
+            <DollarSign className="w-5 h-5 text-studio-accent" />
+            <h2 className="text-base font-bold text-white">Budget</h2>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -1096,7 +1090,7 @@ const Dashboard = ({ onLogout }) => {
   const [budgetSidebarOpen, setBudgetSidebarOpen] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [startDate, setStartDate] = useState('2026-01-05');
-  const [numDays, setNumDays] = useState(5);
+  const [numDays, setNumDays] = useState(3);
   const [showDateConfig, setShowDateConfig] = useState(false);
   const [loading, setLoading] = useState(true);
 
