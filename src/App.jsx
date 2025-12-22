@@ -334,7 +334,7 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
   return (
     <div 
       ref={setNodeRef}
-      className={`flex-shrink-0 w-80 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
+      className={`flex-shrink-0 w-64 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
         isOver ? 'border-studio-accent bg-studio-accent/10 scale-105' : 'border-white/10'
       }`}
     >
@@ -384,7 +384,7 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
       fixed lg:relative inset-y-0 left-0 z-40 bg-studio-dark border-r border-white/10
       transform transition-all duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      ${isMinimized ? 'w-12' : 'w-64'}
+      ${isMinimized ? 'w-12' : 'w-48'}
     `}>
       {isMinimized ? (
         <div className="h-full flex items-center justify-center">
@@ -397,7 +397,7 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
           </button>
         </div>
       ) : (
-        <div className="h-full flex flex-col p-6">
+        <div className="h-full flex flex-col p-3">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Package className="w-5 h-5 text-studio-accent" />
@@ -476,7 +476,7 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
       fixed lg:relative inset-y-0 right-0 z-40 bg-studio-dark border-l border-white/10
       transform transition-all duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
-      ${isMinimized ? 'w-12' : 'w-64'}
+      ${isMinimized ? 'w-12' : 'w-48'}
     `}>
       {isMinimized ? (
         <div className="h-full flex items-center justify-center">
@@ -489,7 +489,7 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
           </button>
         </div>
       ) : (
-        <div className="h-full flex flex-col p-6">
+        <div className="h-full flex flex-col p-3">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <CheckSquare className="w-5 h-5 text-studio-accent" />
@@ -1090,7 +1090,7 @@ const Dashboard = ({ onLogout }) => {
   const [budgetSidebarOpen, setBudgetSidebarOpen] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const [startDate, setStartDate] = useState('2026-01-05');
-  const [numDays, setNumDays] = useState(3);
+  const [numDays, setNumDays] = useState(5);
   const [showDateConfig, setShowDateConfig] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -1508,7 +1508,7 @@ const Dashboard = ({ onLogout }) => {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex gap-3 pb-3">
+            <div className="flex gap-2 pb-3">
               {dates.map((date) => {
                 const dayCards = getCardsForDate(date);
                 return (
