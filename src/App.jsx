@@ -334,17 +334,17 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
   return (
     <div 
       ref={setNodeRef}
-      className={`flex-shrink-0 w-72 bg-white/5 backdrop-blur-sm rounded-lg p-4 border-2 transition-all ${
+      className={`flex-shrink-0 w-56 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
         isOver ? 'border-studio-accent bg-studio-accent/10 scale-105' : 'border-white/10'
       }`}
     >
-      <div className="mb-3">
+      <div className="mb-2">
         <div className="text-studio-accent-light text-xs font-medium">{dayName}</div>
-        <div className="text-white text-xl font-bold">{dayNumber} {monthName}</div>
+        <div className="text-white text-base font-bold">{dayNumber} {monthName}</div>
       </div>
       
       <SortableContext items={cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-2 mb-3 min-h-[150px]">
+        <div className="space-y-2 mb-2 min-h-[120px]">
           {cards.map((card) => (
             <DraggableCard key={card.id} card={card} onEdit={onEditCard} onDelete={onDeleteCard} />
           ))}
@@ -358,9 +358,9 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
       
       <button
         onClick={onAddCard}
-        className="w-full bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg flex items-center justify-center gap-1.5 transition-colors border border-white/20 text-sm"
+        className="w-full bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded text-xs flex items-center justify-center gap-1 transition-colors border border-white/20"
       >
-        <Plus className="w-3.5 h-3.5" />
+        <Plus className="w-3 h-3" />
         Ajouter une tâche
       </button>
     </div>
@@ -384,7 +384,7 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
       fixed lg:relative inset-y-0 left-0 z-40 bg-studio-dark border-r border-white/10
       transform transition-all duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      ${isMinimized ? 'w-16' : 'w-72'}
+      ${isMinimized ? 'w-12' : 'w-64'}
     `}>
       {isMinimized ? (
         <div className="h-full flex flex-col items-center py-6 gap-4">
@@ -401,10 +401,10 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
         </div>
       ) : (
         <div className="h-full flex flex-col p-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Package className="w-6 h-6 text-studio-accent" />
-              <h2 className="text-xl font-bold text-white">Besoins</h2>
+              <Package className="w-5 h-5 text-studio-accent" />
+              <h2 className="text-base font-bold text-white">Besoins</h2>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -427,7 +427,7 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
               onChange={(e) => setNewNeed(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && addNeed()}
               placeholder="Ajouter un besoin..."
-              className="flex-1 bg-white/5 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-studio-accent"
+              className="flex-1 bg-white/5 border border-white/20 rounded px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-studio-accent"
             />
             <button
               onClick={addNeed}
@@ -479,7 +479,7 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
       fixed lg:relative inset-y-0 right-0 z-40 bg-studio-dark border-l border-white/10
       transform transition-all duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
-      ${isMinimized ? 'w-16' : 'w-72'}
+      ${isMinimized ? 'w-12' : 'w-64'}
     `}>
       {isMinimized ? (
         <div className="h-full flex flex-col items-center py-6 gap-4">
@@ -496,10 +496,10 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
         </div>
       ) : (
         <div className="h-full flex flex-col p-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <CheckSquare className="w-6 h-6 text-studio-accent" />
-              <h2 className="text-xl font-bold text-white">To-Do</h2>
+              <CheckSquare className="w-5 h-5 text-studio-accent" />
+              <h2 className="text-base font-bold text-white">To-Do</h2>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -522,7 +522,7 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
               onChange={(e) => setNewTodo(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && addTodo()}
               placeholder="Nouvelle tâche..."
-              className="flex-1 bg-white/5 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-studio-accent"
+              className="flex-1 bg-white/5 border border-white/20 rounded px-2 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-studio-accent"
             />
             <button
               onClick={addTodo}
@@ -1434,7 +1434,7 @@ const Dashboard = ({ onLogout }) => {
             </div>
             <button
               onClick={onLogout}
-              className="text-sm bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
+              className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded transition-colors"
             >
               Déconnexion
             </button>
@@ -1491,12 +1491,12 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content Area */}
         {currentView === 'planning' ? (
-          <main className="flex-1 overflow-x-auto overflow-y-hidden p-4">
-            <div className="mb-3">
+          <main className="flex-1 overflow-x-auto overflow-y-hidden p-3">
+            <div className="mb-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-white mb-1">Planning</h2>
-                  <p className="text-gray-400 text-sm">Glissez-déposez les tâches entre les jours</p>
+                  <h2 className="text-base font-bold text-white mb-0.5">Planning</h2>
+                  <p className="text-gray-400 text-xs">Glissez-déposez les tâches entre les jours</p>
                 </div>
                 <button
                   onClick={() => setShowDateConfig(!showDateConfig)}
@@ -1514,7 +1514,7 @@ const Dashboard = ({ onLogout }) => {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex gap-4 pb-4">
+            <div className="flex gap-3 pb-3">
               {dates.map((date) => {
                 const dayCards = getCardsForDate(date);
                 return (
