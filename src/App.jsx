@@ -769,9 +769,26 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-2">Repérages</h2>
-              <p className="text-gray-400">Photos et vidéos des lieux de tournage</p>
+            <div className="flex-1">
+              <div className="flex items-center gap-3">
+                <div>
+                  <h2 className="text-3xl font-bold text-white mb-2">Repérages</h2>
+                  <p className="text-gray-400">Photos et vidéos des lieux de tournage</p>
+                </div>
+                {selectedCategory !== 'Tous' && selectedCategory !== 'Autres' && categories.length > 1 && filteredPhotos.length > 0 && (
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`Supprimer la catégorie "${selectedCategory}" ?\n\nLes photos seront déplacées dans "Autres".`)) {
+                        deleteCategory(selectedCategory);
+                      }
+                    }}
+                    className="text-red-400 hover:text-red-300 text-xs underline"
+                    title="Supprimer cette catégorie"
+                  >
+                    Supprimer la catégorie
+                  </button>
+                )}
+              </div>
             </div>
             <label className="bg-studio-accent hover:bg-studio-accent-light text-white px-6 py-3 rounded-lg cursor-pointer flex items-center gap-2 transition-all transform hover:scale-105 active:scale-95">
               <Upload className="w-5 h-5" />
@@ -800,32 +817,17 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
               Tous ({photos.length})
             </button>
             {categories.map((cat) => (
-              <div key={cat} className="relative group">
-                <button
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 pr-8 rounded-lg text-sm transition-all ${
-                    selectedCategory === cat
-                      ? 'bg-studio-accent text-white'
-                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                  }`}
-                >
-                  {cat} ({photos.filter(p => (p.category || 'Autres') === cat).length})
-                </button>
-                {cat !== 'Autres' && categories.length > 1 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (window.confirm(`Supprimer la catégorie "${cat}" ?\n\nLes photos seront déplacées dans "Autres".`)) {
-                        deleteCategory(cat);
-                      }
-                    }}
-                    className="absolute top-1/2 -translate-y-1/2 right-1 bg-red-500/80 lg:bg-red-500 text-white rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100 transition-opacity text-[10px] lg:text-xs hover:bg-red-600"
-                    title="Supprimer la catégorie"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-studio-accent text-white'
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                }`}
+              >
+                {cat} ({photos.filter(p => (p.category || 'Autres') === cat).length})
+              </button>
             ))}
             {showCategoryInput ? (
               <div className="flex gap-2">
@@ -870,6 +872,18 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
               {selectedCategory === 'Tous' ? 'Aucune photo de repérage' : `Aucun média dans "${selectedCategory}"`}
             </h3>
             <p className="text-gray-400 mb-6">Commencez par ajouter des photos ou vidéos des lieux de tournage</p>
+            {selectedCategory !== 'Tous' && selectedCategory !== 'Autres' && categories.length > 1 && (
+              <button
+                onClick={() => {
+                  if (window.confirm(`Supprimer la catégorie "${selectedCategory}" ?\n\nLes photos seront déplacées dans "Autres".`)) {
+                    deleteCategory(selectedCategory);
+                  }
+                }}
+                className="text-red-400 hover:text-red-300 text-sm underline mb-6 inline-block"
+              >
+                Supprimer cette catégorie
+              </button>
+            )}
             <label className="inline-flex items-center gap-2 bg-studio-accent hover:bg-studio-accent-light text-white px-6 py-3 rounded-lg cursor-pointer transition-colors">
               <Upload className="w-5 h-5" />
               Ajouter photos/vidéos
