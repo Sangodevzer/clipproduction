@@ -647,20 +647,72 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
           return;
         }
 
-        const reader = new FileReader();
-        reader.onload = async (event) => {
+        // Pour les vidéos, pas de compression
+        if (file.type.startsWith('video/')) {
+          const reader = new FileReader();
+          reader.onload = async (event) => {
+            const newPhoto = {
+              id: generateId(),
+              imageData: event.target.result,
+              location: '',
+              description: '',
+              sceneNumber: '',
+              category: 'Autres',
+              mediaType: 'video',
+              uploadDate: new Date().toISOString()
+            };
+            await onAddPhoto(newPhoto);
+            resolve();
+          };
+          reader.readAsDataURL(file);
+          return;
+        }
+
+        // Pour les images, compression avant upload
+        const img = new Image();
+        img.onload = async () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Limiter la taille max à 1920px
+          let width = img.width;
+          let height = img.height;
+          const maxSize = 1920;
+          
+          if (width > maxSize || height > maxSize) {
+            if (width > height) {
+              height = (height / width) * maxSize;
+              width = maxSize;
+            } else {
+              width = (width / height) * maxSize;
+              height = maxSize;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Compression en JPEG qualité 0.8
+          const compressedData = canvas.toDataURL('image/jpeg', 0.8);
+          
           const newPhoto = {
             id: generateId(),
-            imageData: event.target.result,
+            imageData: compressedData,
             location: '',
             description: '',
             sceneNumber: '',
             category: 'Autres',
-            mediaType: file.type.startsWith('video/') ? 'video' : 'image',
+            mediaType: 'image',
             uploadDate: new Date().toISOString()
           };
           await onAddPhoto(newPhoto);
           resolve();
+        };
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          img.src = e.target.result;
         };
         reader.readAsDataURL(file);
       });
