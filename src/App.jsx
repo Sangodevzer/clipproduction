@@ -1534,8 +1534,16 @@ const Dashboard = ({ onLogout }) => {
 
   // Scouting callbacks
   const addScoutingPhoto = async (photo) => {
+    console.log('📸 Tentative ajout photo, taille:', photo.imageData.length, 'caractères');
     setScoutingPhotos([...scoutingPhotos, photo]);
-    await api.createScoutingPhoto(photo);
+    try {
+      const result = await api.createScoutingPhoto(photo);
+      console.log('✅ Photo ajoutée avec succès:', result);
+    } catch (error) {
+      console.error('❌ Erreur ajout photo:', error);
+      // Retirer la photo du state si erreur
+      setScoutingPhotos(scoutingPhotos.filter(p => p.id !== photo.id));
+    }
   };
 
   const deleteScoutingPhoto = async (id) => {

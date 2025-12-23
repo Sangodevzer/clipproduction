@@ -355,15 +355,17 @@ app.get('/api/scouting/photos', async (req, res) => {
 
 app.post('/api/scouting/photos', async (req, res) => {
   const { id, imageData, location, description, sceneNumber, category, mediaType, uploadDate } = req.body;
+  console.log('📸 Reçu photo upload:', { id, mediaType, category, imageDataLength: imageData?.length || 0 });
   try {
     await pool.query(
       'INSERT INTO scouting_photos (id, image_data, location, description, scene_number, category, media_type, upload_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
       [id, imageData, location, description, sceneNumber, category || 'Autres', mediaType || 'image', uploadDate]
     );
+    console.log('✅ Photo sauvegardée avec succès:', id);
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('❌ Erreur sauvegarde photo:', err.message);
+    res.status(500).json({ error: 'Server error', details: err.message });
   }
 });
 

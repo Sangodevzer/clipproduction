@@ -140,12 +140,18 @@ export const api = {
   },
 
   async createScoutingPhoto(photo) {
+    console.log('🌐 API: Envoi photo, taille:', photo.imageData.length);
     const response = await fetch(`${API_URL}/api/scouting/photos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(photo)
     });
-    return response.json();
+    const data = await response.json();
+    console.log('🌐 API: Réponse serveur:', response.status, data);
+    if (!response.ok) {
+      throw new Error(`Erreur serveur: ${response.status} - ${JSON.stringify(data)}`);
+    }
+    return data;
   },
 
   async updateScoutingPhoto(id, photo) {
