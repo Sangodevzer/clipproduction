@@ -657,7 +657,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
               location: '',
               description: '',
               sceneNumber: '',
-              category: 'Autres',
+              category: selectedCategory || 'Autres',
               mediaType: 'video',
               uploadDate: new Date().toISOString()
             };
@@ -702,7 +702,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
             location: '',
             description: '',
             sceneNumber: '',
-            category: 'Autres',
+            category: selectedCategory || 'Autres',
             mediaType: 'image',
             uploadDate: new Date().toISOString()
           };
