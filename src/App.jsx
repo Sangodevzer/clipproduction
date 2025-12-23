@@ -455,7 +455,7 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
             />
             <button
               onClick={addNeed}
-              className="bg-studio-accent text-white p-2 rounded-lg hover:bg-studio-accent-light transition-colors"
+              className="flex-shrink-0 bg-studio-accent text-white p-2 rounded-lg hover:bg-studio-accent-light transition-colors"
             >
               <Plus className="w-5 h-5" />
             </button>
@@ -547,7 +547,8 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
             />
             <button
               onClick={addTodo}
-              className="bg-studio-accent text-white p-2 rounded-lg hover:bg-studio-accent-light transition-colors"
+              className="flex-shrink-0 bg-studio-accent text-white p-2 rounded-lg hover:bg-studio-accent-light transition-colors"
+            >
             >
               <Plus className="w-5 h-5" />
             </button>
