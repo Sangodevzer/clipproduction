@@ -591,8 +591,155 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
   );
 };
 
+// Sortable Photo Component
+const SortablePhoto = ({ photo, onSelect, onEdit, onDelete, editingPhoto, editForm, setEditForm, saveEdit, categories, onUpdatePhoto }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: photo.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 hover:border-studio-accent/50 transition-all group">
+      <div className="relative aspect-video bg-black/50">
+        <div {...attributes} {...listeners} className="absolute top-2 left-2 z-10 cursor-move bg-black/70 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+          <GripVertical className="w-4 h-4 text-white" />
+        </div>
+        <div className="cursor-pointer" onClick={() => onSelect(photo)}>
+          {photo.mediaType === 'video' ? (
+            <>
+              <video 
+                src={photo.imageData} 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                <Camera className="w-3 h-3" />
+                Vidéo
+              </div>
+            </>
+          ) : (
+            <img 
+              src={photo.imageData} 
+              alt={photo.location || 'Repérage'}
+              className="w-full h-full object-cover"
+            />
+          )}
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <ZoomIn className="w-8 h-8 text-white" />
+          </div>
+        </div>
+      </div>
+      
+      {editingPhoto === photo.id ? (
+        <div className="p-4 space-y-2">
+          <input
+            type="text"
+            value={editForm.sceneNumber}
+            onChange={(e) => setEditForm({...editForm, sceneNumber: e.target.value})}
+            placeholder="N° de scène"
+            className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
+          />
+          <input
+            type="text"
+            value={editForm.location}
+            onChange={(e) => setEditForm({...editForm, location: e.target.value})}
+            placeholder="Lieu"
+            className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
+          />
+          <textarea
+            value={editForm.description}
+            onChange={(e) => setEditForm({...editForm, description: e.target.value})}
+            placeholder="Description..."
+            className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent min-h-[60px]"
+          />
+          <select
+            value={editForm.category}
+            onChange={(e) => setEditForm({...editForm, category: e.target.value})}
+            className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat} className="bg-studio-dark text-white">{cat}</option>
+            ))}
+          </select>
+          <div className="flex gap-2 pt-2">
+            <button
+              onClick={saveEdit}
+              className="flex-1 bg-studio-accent hover:bg-studio-accent-light text-white px-3 py-2 rounded text-sm"
+            >
+              Sauvegarder
+            </button>
+            <button
+              onClick={() => onEdit(null)}
+              className="flex-1 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded text-sm"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="p-4">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1">
+              {photo.sceneNumber && (
+                <div className="text-studio-accent font-semibold text-sm mb-1">
+                  Scène {photo.sceneNumber}
+                </div>
+              )}
+              {photo.location && (
+                <h3 className="text-white font-medium text-sm flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  {photo.location}
+                </h3>
+              )}
+              {photo.description && (
+                <p className="text-gray-400 text-xs mt-1 line-clamp-2">{photo.description}</p>
+              )}
+              {!photo.location && !photo.description && !photo.sceneNumber && (
+                <p className="text-gray-500 text-xs italic">Aucune information</p>
+              )}
+            </div>
+          </div>
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={() => {
+                onEdit(photo.id);
+                setEditForm({
+                  location: photo.location || '',
+                  description: photo.description || '',
+                  sceneNumber: photo.sceneNumber || '',
+                  category: photo.category || 'Autres'
+                });
+              }}
+              className="flex-1 bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded text-xs flex items-center justify-center gap-1"
+            >
+              <Edit2 className="w-3 h-3" />
+              Éditer
+            </button>
+            <button
+              onClick={() => onDelete(photo.id)}
+              className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-1.5 rounded text-xs flex items-center justify-center gap-1"
+            >
+              <Trash2 className="w-3 h-3" />
+              Supprimer
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Scouting (Repérages) Page Component
-const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
+const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto, onReorderPhotos }) => {
   const [uploading, setUploading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [editingPhoto, setEditingPhoto] = useState(null);
@@ -601,6 +748,17 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
   const [newCategory, setNewCategory] = useState('');
   const [showCategoryInput, setShowCategoryInput] = useState(false);
   const [editForm, setEditForm] = useState({ location: '', description: '', sceneNumber: '', category: 'Autres' });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Charger les catégories depuis les settings
   useEffect(() => {
@@ -764,22 +922,46 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     ? photos 
     : photos.filter(p => (p.category || 'Autres') === selectedCategory);
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    
+    if (!over || active.id === over.id) return;
+    
+    const oldIndex = filteredPhotos.findIndex(p => p.id === active.id);
+    const newIndex = filteredPhotos.findIndex(p => p.id === over.id);
+    
+    if (oldIndex === -1 || newIndex === -1) return;
+    
+    // Réorganiser les photos
+    const reordered = [...filteredPhotos];
+    const [moved] = reordered.splice(oldIndex, 1);
+    reordered.splice(newIndex, 0, moved);
+    
+    // Mettre à jour l'ordre global
+    onReorderPhotos(reordered, filteredPhotos);
+  };
+
   return (
-    <div className="flex-1 overflow-y-auto p-4 lg:p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <div>
-                  <h2 className="text-3xl font-bold text-white mb-2">Repérages</h2>
-                  <p className="text-gray-400">Photos et vidéos des lieux de tournage</p>
-                </div>
-                {selectedCategory !== 'Tous' && selectedCategory !== 'Autres' && categories.length > 1 && filteredPhotos.length > 0 && (
-                  <button
-                    onClick={() => {
-                      if (window.confirm(`Supprimer la catégorie "${selectedCategory}" ?\n\nLes photos seront déplacées dans "Autres".`)) {
-                        deleteCategory(selectedCategory);
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex-1 overflow-y-auto p-4 lg:p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-3">
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">Repérages</h2>
+                    <p className="text-gray-400">Photos et vidéos des lieux de tournage</p>
+                  </div>
+                  {selectedCategory !== 'Tous' && selectedCategory !== 'Autres' && categories.length > 1 && filteredPhotos.length > 0 && (
+                    <button
+                      onClick={() => {
+                        if (window.confirm(`Supprimer la catégorie "${selectedCategory}" ?\n\nLes photos seront déplacées dans "Autres".`)) {
+                          deleteCategory(selectedCategory);
                       }
                     }}
                     className="text-red-400 hover:text-red-300 text-xs underline"
@@ -897,119 +1079,25 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
             </label>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPhotos.map((photo) => (
-              <div key={photo.id} className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 hover:border-studio-accent/50 transition-all group">
-                <div className="relative aspect-video bg-black/50 cursor-pointer" onClick={() => setSelectedPhoto(photo)}>
-                  {photo.mediaType === 'video' ? (
-                    <>
-                      <video 
-                        src={photo.imageData} 
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
-                        <Camera className="w-3 h-3" />
-                        Vidéo
-                      </div>
-                    </>
-                  ) : (
-                    <img 
-                      src={photo.imageData} 
-                      alt={photo.location || 'Repérage'}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <ZoomIn className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-                
-                {editingPhoto === photo.id ? (
-                  <div className="p-4 space-y-2">
-                    <input
-                      type="text"
-                      value={editForm.sceneNumber}
-                      onChange={(e) => setEditForm({...editForm, sceneNumber: e.target.value})}
-                      placeholder="N° de scène"
-                      className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
-                    />
-                    <input
-                      type="text"
-                      value={editForm.location}
-                      onChange={(e) => setEditForm({...editForm, location: e.target.value})}
-                      placeholder="Lieu"
-                      className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
-                    />
-                    <textarea
-                      value={editForm.description}
-                      onChange={(e) => setEditForm({...editForm, description: e.target.value})}
-                      placeholder="Description..."
-                      className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent min-h-[60px]"
-                    />
-                    <select
-                      value={editForm.category}
-                      onChange={(e) => setEditForm({...editForm, category: e.target.value})}
-                      className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
-                    >
-                      {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
-                      ))}
-                    </select>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={saveEdit}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm transition-colors"
-                      >
-                        Sauvegarder
-                      </button>
-                      <button
-                        onClick={() => setEditingPhoto(null)}
-                        className="flex-1 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded text-sm transition-colors"
-                      >
-                        Annuler
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4">
-                    {photo.sceneNumber && (
-                      <div className="text-xs text-studio-accent-light font-semibold mb-1">
-                        Scène {photo.sceneNumber}
-                      </div>
-                    )}
-                    {photo.location && (
-                      <div className="flex items-center gap-1 text-white font-semibold mb-1">
-                        <MapPin className="w-4 h-4 text-studio-accent" />
-                        <span className="text-sm">{photo.location}</span>
-                      </div>
-                    )}
-                    {photo.description && (
-                      <p className="text-sm text-gray-400 mb-3 line-clamp-2">{photo.description}</p>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">
-                        {new Date(photo.uploadDate).toLocaleDateString('fr-FR')}
-                      </span>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => startEdit(photo)}
-                          className="text-studio-accent hover:text-studio-accent-light transition-colors"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => onDeletePhoto(photo.id)}
-                          className="text-red-400 hover:text-red-300 transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <SortableContext items={filteredPhotos.map(p => p.id)} strategy={verticalListSortingStrategy}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPhotos.map((photo) => (
+                <SortablePhoto
+                  key={photo.id}
+                  photo={photo}
+                  onSelect={setSelectedPhoto}
+                  onEdit={setEditingPhoto}
+                  onDelete={onDeletePhoto}
+                  editingPhoto={editingPhoto}
+                  editForm={editForm}
+                  setEditForm={setEditForm}
+                  saveEdit={saveEdit}
+                  categories={categories}
+                  onUpdatePhoto={onUpdatePhoto}
+                />
+              ))}
+            </div>
+          </SortableContext>
         )}
 
         {/* Photo Modal */}
@@ -1067,6 +1155,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
         )}
       </div>
     </div>
+    </DndContext>
   );
 };
 
@@ -1564,6 +1653,26 @@ const Dashboard = ({ onLogout }) => {
     await api.updateScoutingPhoto(id, updatedPhoto);
   };
 
+  const reorderScoutingPhotos = (reorderedPhotos, originalFiltered) => {
+    // Créer une copie de toutes les photos
+    const allPhotos = [...scoutingPhotos];
+    
+    // Remplacer les photos réorganisées dans le bon ordre
+    const updatedPhotos = allPhotos.map(photo => {
+      const indexInReordered = reorderedPhotos.findIndex(p => p.id === photo.id);
+      if (indexInReordered !== -1) {
+        return reorderedPhotos[indexInReordered];
+      }
+      return photo;
+    });
+    
+    // Réorganiser dans l'ordre correct
+    const notInFiltered = updatedPhotos.filter(p => !reorderedPhotos.find(rp => rp.id === p.id));
+    const finalPhotos = [...reorderedPhotos, ...notInFiltered];
+    
+    setScoutingPhotos(finalPhotos);
+  };
+
   const handleDragStart = (event) => {
     setActiveId(event.active.id);
   };
@@ -1859,6 +1968,7 @@ const Dashboard = ({ onLogout }) => {
             onAddPhoto={addScoutingPhoto}
             onDeletePhoto={deleteScoutingPhoto}
             onUpdatePhoto={updateScoutingPhoto}
+            onReorderPhotos={reorderScoutingPhotos}
           />
         )}
 
