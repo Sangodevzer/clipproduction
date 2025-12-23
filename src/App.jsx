@@ -411,7 +411,7 @@ const NeedsSidebar = ({ needs, onAddNeed, onDeleteNeed, isOpen, onClose }) => {
       fixed lg:relative inset-y-0 left-0 z-40 bg-studio-dark border-r border-white/10
       transform transition-all duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      ${isMinimized ? 'w-12' : 'w-48'}
+      ${isMinimized ? 'w-12 lg:w-12' : 'w-64 lg:w-56'}
     `}>
       {isMinimized ? (
         <div className="h-full flex items-center justify-center">
@@ -503,7 +503,7 @@ const TodoSidebar = ({ todos, onAddTodo, onToggleTodo, onDeleteTodo, isOpen, onC
       fixed lg:relative inset-y-0 right-0 z-40 bg-studio-dark border-l border-white/10
       transform transition-all duration-300 ease-in-out
       ${isOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
-      ${isMinimized ? 'w-12' : 'w-48'}
+      ${isMinimized ? 'w-12 lg:w-12' : 'w-64 lg:w-56'}
     `}>
       {isMinimized ? (
         <div className="h-full flex items-center justify-center">
@@ -608,26 +608,33 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
 
     setUploading(true);
     
-    for (const file of files) {
-      if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) continue;
+    const uploadPromises = files.map((file) => {
+      return new Promise((resolve) => {
+        if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+          resolve();
+          return;
+        }
 
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const newPhoto = {
-          id: generateId(),
-          imageData: event.target.result,
-          location: '',
-          description: '',
-          sceneNumber: '',
-          category: 'Autres',
-          mediaType: file.type.startsWith('video/') ? 'video' : 'image',
-          uploadDate: new Date().toISOString()
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const newPhoto = {
+            id: generateId(),
+            imageData: event.target.result,
+            location: '',
+            description: '',
+            sceneNumber: '',
+            category: 'Autres',
+            mediaType: file.type.startsWith('video/') ? 'video' : 'image',
+            uploadDate: new Date().toISOString()
+          };
+          await onAddPhoto(newPhoto);
+          resolve();
         };
-        await onAddPhoto(newPhoto);
-      };
-      reader.readAsDataURL(file);
-    }
+        reader.readAsDataURL(file);
+      });
+    });
     
+    await Promise.all(uploadPromises);
     setUploading(false);
     e.target.value = '';
   };
@@ -655,6 +662,23 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
       setCategories([...categories, newCategory.trim()]);
       setNewCategory('');
       setShowCategoryInput(false);
+    }
+  };
+
+  const deleteCategory = (categoryToDelete) => {
+    if (categories.length <= 1) return; // Garder au moins une catégorie
+    if (categoryToDelete === 'Autres') return; // Ne pas supprimer la catégorie par défaut
+    
+    // Réassigner toutes les photos de cette catégorie à "Autres"
+    photos.forEach(photo => {
+      if (photo.category === categoryToDelete) {
+        onUpdatePhoto(photo.id, { ...photo, category: 'Autres' });
+      }
+    });
+    
+    setCategories(categories.filter(cat => cat !== categoryToDelete));
+    if (selectedCategory === categoryToDelete) {
+      setSelectedCategory('Tous');
     }
   };
 
@@ -698,17 +722,32 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
               Tous ({photos.length})
             </button>
             {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                  selectedCategory === cat
-                    ? 'bg-studio-accent text-white'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                }`}
-              >
-                {cat} ({photos.filter(p => (p.category || 'Autres') === cat).length})
-              </button>
+              <div key={cat} className="relative group">
+                <button
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                    selectedCategory === cat
+                      ? 'bg-studio-accent text-white'
+                      : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                  }`}
+                >
+                  {cat} ({photos.filter(p => (p.category || 'Autres') === cat).length})
+                </button>
+                {cat !== 'Autres' && categories.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (window.confirm(`Supprimer la catégorie "${cat}" ?\n\nLes photos seront déplacées dans "Autres".`)) {
+                        deleteCategory(cat);
+                      }
+                    }}
+                    className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs hover:bg-red-600"
+                    title="Supprimer la catégorie"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
             ))}
             {showCategoryInput ? (
               <div className="flex gap-2">
