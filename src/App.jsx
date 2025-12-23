@@ -163,61 +163,61 @@ const DraggableCard = ({ card, onEdit, onDelete }) => {
 
   if (isEditing) {
     return (
-      <div ref={setNodeRef} style={style} className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 mb-3">
+      <div ref={setNodeRef} style={style} className="bg-white/10 backdrop-blur-sm rounded-xl p-3 sm:p-4 border border-white/20 mb-3 shadow-lg">
         <input
           type="text"
           value={editedCard.title}
           onChange={(e) => setEditedCard({ ...editedCard, title: e.target.value })}
-          className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white mb-2 focus:outline-none focus:ring-2 focus:ring-studio-accent"
-          placeholder="Titre"
+          className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2.5 text-white text-sm sm:text-base mb-2.5 focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent transition-all"
+          placeholder="Titre de la tâche"
         />
         <textarea
           value={editedCard.description}
           onChange={(e) => setEditedCard({ ...editedCard, description: e.target.value })}
-          className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white mb-2 focus:outline-none focus:ring-2 focus:ring-studio-accent min-h-[60px]"
-          placeholder="Description"
+          className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2.5 text-white text-sm sm:text-base mb-2.5 focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent min-h-[80px] resize-y transition-all"
+          placeholder="Description détaillée..."
         />
         <input
           type="time"
           value={editedCard.time}
           onChange={(e) => setEditedCard({ ...editedCard, time: e.target.value })}
-          className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white mb-2 focus:outline-none focus:ring-2 focus:ring-studio-accent"
+          className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2.5 text-white text-sm sm:text-base mb-2.5 focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent transition-all"
         />
         <input
           type="url"
           value={editedCard.mapUrl}
           onChange={(e) => setEditedCard({ ...editedCard, mapUrl: e.target.value })}
-          className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white mb-3 focus:outline-none focus:ring-2 focus:ring-studio-accent"
-          placeholder="URL Google Maps (optionnel)"
+          className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2.5 text-white text-sm sm:text-base mb-3 focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent transition-all"
+          placeholder="https://maps.google.com/..."
         />
         <select
           value={editedCard.category}
           onChange={(e) => setEditedCard({ ...editedCard, category: e.target.value })}
-          className="w-full bg-white/5 border border-white/20 rounded px-3 py-2 text-white mb-3 focus:outline-none focus:ring-2 focus:ring-studio-accent"
+          className="w-full bg-white/5 border border-white/20 rounded-lg px-3 py-2.5 text-white text-sm sm:text-base mb-3 focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent transition-all"
         >
-          <option value="shooting">Tournage (Violet)</option>
-          <option value="catering">Catering (Vert)</option>
-          <option value="travel">Déplacement (Bleu)</option>
-          <option value="meeting">Réunion (Jaune)</option>
-          <option value="red">Rouge</option>
-          <option value="orange">Orange</option>
-          <option value="pink">Rose</option>
-          <option value="indigo">Indigo</option>
-          <option value="teal">Turquoise</option>
-          <option value="other">Autre (Gris)</option>
+          <option value="shooting">🎬 Tournage (Violet)</option>
+          <option value="catering">🍽️ Catering (Vert)</option>
+          <option value="travel">🚗 Déplacement (Bleu)</option>
+          <option value="meeting">👥 Réunion (Jaune)</option>
+          <option value="red">🔴 Rouge</option>
+          <option value="orange">🟠 Orange</option>
+          <option value="pink">🩷 Rose</option>
+          <option value="indigo">🟣 Indigo</option>
+          <option value="teal">🩵 Turquoise</option>
+          <option value="other">⚪ Autre (Gris)</option>
         </select>
-        <div className="flex gap-2">
+        <div className="flex gap-2 sm:gap-3">
           <button
             onClick={handleSave}
-            className="flex-1 bg-studio-accent text-white px-3 py-2 rounded hover:bg-studio-accent-light transition-colors"
+            className="flex-1 bg-studio-accent text-white px-4 py-2.5 rounded-lg hover:bg-studio-accent-light transition-all transform hover:scale-105 active:scale-95 font-medium text-sm sm:text-base shadow-lg"
           >
-            Enregistrer
+            ✓ Enregistrer
           </button>
           <button
             onClick={handleCancel}
-            className="flex-1 bg-white/10 text-white px-3 py-2 rounded hover:bg-white/20 transition-colors"
+            className="flex-1 bg-white/10 text-white px-4 py-2.5 rounded-lg hover:bg-white/20 transition-all font-medium text-sm sm:text-base"
           >
-            Annuler
+            ✕ Annuler
           </button>
         </div>
       </div>
@@ -225,68 +225,73 @@ const DraggableCard = ({ card, onEdit, onDelete }) => {
   }
 
   const categoryColors = {
-    shooting: 'bg-purple-600/30 border-purple-500',
-    catering: 'bg-green-600/30 border-green-500',
-    travel: 'bg-blue-600/30 border-blue-500',
-    meeting: 'bg-yellow-600/30 border-yellow-500',
-    other: 'bg-gray-600/30 border-gray-500',
-    red: 'bg-red-600/30 border-red-500',
-    orange: 'bg-orange-600/30 border-orange-500',
-    pink: 'bg-pink-600/30 border-pink-500',
-    indigo: 'bg-indigo-600/30 border-indigo-500',
-    teal: 'bg-teal-600/30 border-teal-500',
+    shooting: 'bg-purple-600/30 border-purple-400/50 hover:border-purple-400',
+    catering: 'bg-green-600/30 border-green-400/50 hover:border-green-400',
+    travel: 'bg-blue-600/30 border-blue-400/50 hover:border-blue-400',
+    meeting: 'bg-yellow-600/30 border-yellow-400/50 hover:border-yellow-400',
+    other: 'bg-gray-600/30 border-gray-400/50 hover:border-gray-400',
+    red: 'bg-red-600/30 border-red-400/50 hover:border-red-400',
+    orange: 'bg-orange-600/30 border-orange-400/50 hover:border-orange-400',
+    pink: 'bg-pink-600/30 border-pink-400/50 hover:border-pink-400',
+    indigo: 'bg-indigo-600/30 border-indigo-400/50 hover:border-indigo-400',
+    teal: 'bg-teal-600/30 border-teal-400/50 hover:border-teal-400',
   };
 
   const categoryLabels = {
-    shooting: 'Tournage',
-    catering: 'Catering',
-    travel: 'Déplacement',
-    meeting: 'Réunion',
-    other: 'Autre',
-    red: 'Rouge',
-    orange: 'Orange',
-    pink: 'Rose',
-    indigo: 'Indigo',
-    teal: 'Turquoise',
+    shooting: '🎬 Tournage',
+    catering: '🍽️ Catering',
+    travel: '🚗 Déplacement',
+    meeting: '👥 Réunion',
+    other: '⚪ Autre',
+    red: '🔴 Rouge',
+    orange: '🟠 Orange',
+    pink: '🩷 Rose',
+    indigo: '🟣 Indigo',
+    teal: '🩵 Turquoise',
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`${categoryColors[card.category] || categoryColors.other} backdrop-blur-sm rounded-lg p-2 border-2 mb-2 cursor-pointer hover:shadow-lg transition-all`}
+      className={`${categoryColors[card.category] || categoryColors.other} backdrop-blur-sm rounded-xl p-3 sm:p-3.5 border-2 mb-2.5 cursor-pointer hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]`}
       onClick={() => setIsEditing(true)}
     >
-      <div className="flex items-start gap-2">
-        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing mt-1">
-          <GripVertical className="w-4 h-4 text-gray-400" />
+      <div className="flex items-start gap-2 sm:gap-3">
+        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing mt-1 flex-shrink-0 touch-none">
+          <GripVertical className="w-5 h-5 text-gray-300 hover:text-white transition-colors" />
         </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-white text-sm mb-0.5">{card.title}</h3>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2 mb-1.5">
+            <h3 className="font-semibold text-white text-sm sm:text-base leading-tight break-words">{card.title}</h3>
+            <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full text-gray-300 whitespace-nowrap flex-shrink-0">
+              {categoryLabels[card.category] || categoryLabels.other}
+            </span>
+          </div>
           {card.description && (
-            <div>
-              <p className="text-xs text-gray-300 mb-1">
-                {showFullDescription || card.description.length <= 100
+            <div className="mb-2">
+              <p className="text-xs sm:text-sm text-gray-200 leading-relaxed break-words">
+                {showFullDescription || card.description.length <= 80
                   ? card.description
-                  : `${card.description.substring(0, 100)}...`}
+                  : `${card.description.substring(0, 80)}...`}
               </p>
-              {card.description.length > 100 && (
+              {card.description.length > 80 && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setShowFullDescription(!showFullDescription);
                   }}
-                  className="text-xs text-studio-accent-light hover:text-studio-accent transition-colors mb-2"
+                  className="text-xs text-studio-accent-light hover:text-studio-accent transition-colors mt-1 font-medium"
                 >
-                  {showFullDescription ? 'Voir moins' : 'Voir plus...'}
+                  {showFullDescription ? '↑ Voir moins' : '↓ Voir plus...'}
                 </button>
               )}
             </div>
           )}
           {card.time && (
-            <div className="flex items-center gap-1 text-xs text-gray-400">
-              <Clock className="w-3 h-3" />
-              <span>{card.time}</span>
+            <div className="flex items-center gap-1.5 text-xs sm:text-sm text-gray-300 mb-2 bg-white/10 rounded-lg px-2 py-1 w-fit">
+              <Clock className="w-3.5 h-3.5 flex-shrink-0" />
+              <span className="font-medium">{card.time}</span>
             </div>
           )}
           {card.mapUrl && (
@@ -295,10 +300,10 @@ const DraggableCard = ({ card, onEdit, onDelete }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 text-xs bg-studio-accent text-white px-2 py-1 rounded hover:bg-studio-accent-light transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm bg-studio-accent text-white px-3 py-1.5 rounded-lg hover:bg-studio-accent-light transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md"
             >
-              <MapPin className="w-3 h-3" />
-              Voir le lieu
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>Voir le lieu</span>
             </a>
           )}
         </div>
@@ -307,9 +312,10 @@ const DraggableCard = ({ card, onEdit, onDelete }) => {
             e.stopPropagation();
             onDelete(card.id);
           }}
-          className="text-red-400 hover:text-red-300 transition-colors"
+          className="text-red-400 hover:text-red-300 transition-all transform hover:scale-110 active:scale-90 flex-shrink-0 p-1 hover:bg-red-500/20 rounded-lg"
+          title="Supprimer"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
     </div>
@@ -325,32 +331,53 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
   const dayNumber = date.getDate();
   const monthName = monthNames[date.getMonth()];
   const dateStr = date.toISOString().split('T')[0];
+  const isToday = new Date().toDateString() === date.toDateString();
 
   const { setNodeRef, isOver } = useDroppable({
     id: `droppable-${dateStr}`,
     data: { date: dateStr }
   });
 
+  const taskCount = cards.length;
+
   return (
     <div 
       ref={setNodeRef}
-      className={`flex-shrink-0 w-64 bg-white/5 backdrop-blur-sm rounded-lg p-3 border-2 transition-all ${
-        isOver ? 'border-studio-accent bg-studio-accent/10 scale-105' : 'border-white/10'
+      className={`flex-shrink-0 w-full sm:w-80 lg:w-96 bg-white/5 backdrop-blur-md rounded-xl p-4 border-2 transition-all ${
+        isOver ? 'border-studio-accent bg-studio-accent/10 scale-[1.02] shadow-2xl' : isToday ? 'border-studio-accent/50 shadow-xl' : 'border-white/10 shadow-lg'
       }`}
     >
-      <div className="mb-2">
-        <div className="text-studio-accent-light text-xs font-medium">{dayName}</div>
-        <div className="text-white text-base font-bold">{dayNumber} {monthName}</div>
+      <div className="mb-3 pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-studio-accent-light text-xs sm:text-sm font-semibold uppercase tracking-wide">{dayName}</div>
+            <div className="text-white text-xl sm:text-2xl font-bold">
+              {dayNumber} <span className="text-base sm:text-lg text-gray-400">{monthName}</span>
+            </div>
+          </div>
+          {taskCount > 0 && (
+            <div className="bg-studio-accent/20 text-studio-accent-light px-3 py-1.5 rounded-full text-xs sm:text-sm font-bold border border-studio-accent/30">
+              {taskCount} {taskCount > 1 ? 'tâches' : 'tâche'}
+            </div>
+          )}
+          {isToday && (
+            <div className="bg-green-500/20 text-green-400 px-3 py-1.5 rounded-full text-xs sm:text-sm font-bold border border-green-500/30">
+              Aujourd'hui
+            </div>
+          )}
+        </div>
       </div>
       
       <SortableContext items={cards.map(c => c.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-2 mb-2 min-h-[120px]">
+        <div className="space-y-2 mb-3 min-h-[140px] max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent pr-1">
           {cards.map((card) => (
             <DraggableCard key={card.id} card={card} onEdit={onEditCard} onDelete={onDeleteCard} />
           ))}
           {cards.length === 0 && (
-            <div className="text-gray-500 text-center py-8 text-sm">
-              Glissez une tâche ici
+            <div className="text-gray-400 text-center py-12 text-sm sm:text-base">
+              <Plus className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-2 opacity-50" />
+              <p className="font-medium">Aucune tâche</p>
+              <p className="text-xs mt-1 opacity-75">Glissez ou ajoutez une tâche</p>
             </div>
           )}
         </div>
@@ -358,10 +385,10 @@ const DayColumn = ({ date, cards, onAddCard, onEditCard, onDeleteCard }) => {
       
       <button
         onClick={onAddCard}
-        className="w-full bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded text-xs flex items-center justify-center gap-1 transition-colors border border-white/20"
+        className="w-full bg-white/10 hover:bg-studio-accent text-white px-3 py-2.5 rounded-lg text-sm sm:text-base flex items-center justify-center gap-2 transition-all transform hover:scale-105 active:scale-95 border border-white/20 hover:border-studio-accent font-medium shadow-md"
       >
-        <Plus className="w-3 h-3" />
-        Ajouter une tâche
+        <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+        <span>Ajouter une tâche</span>
       </button>
     </div>
   );
@@ -1449,105 +1476,119 @@ const Dashboard = ({ onLogout }) => {
       ) : (
         <>
       {/* Header */}
-      <header className="bg-studio-darker/80 backdrop-blur-lg border-b border-white/10 px-4 lg:px-6 py-2.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <header className="bg-studio-darker/80 backdrop-blur-lg border-b border-white/10 px-3 sm:px-4 lg:px-6 py-3 sm:py-3.5 shadow-lg">
+        <div className="flex items-center justify-between max-w-[2000px] mx-auto">
+          <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
             <button
               onClick={() => setLeftSidebarOpen(!leftSidebarOpen)}
-              className="lg:hidden text-white hover:text-studio-accent transition-colors"
+              className="lg:hidden text-white hover:text-studio-accent transition-colors p-2 hover:bg-white/10 rounded-lg flex-shrink-0"
+              aria-label="Menu"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-studio-accent" />
-              <h1 className="text-lg lg:text-xl font-bold sci-fi-title" data-text="JEUNE PATRON PRODUCTION">
-                Jeune Patron Production
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-studio-accent flex-shrink-0" />
+              <h1 className="text-sm sm:text-lg lg:text-xl font-bold sci-fi-title truncate" data-text="JEUNE PATRON PRODUCTION">
+                <span className="hidden sm:inline">Jeune Patron Production</span>
+                <span className="sm:hidden">JP Production</span>
               </h1>
             </div>
             {/* Navigation Tabs */}
-            <div className="hidden lg:flex items-center gap-2 ml-8">
+            <div className="hidden md:flex items-center gap-2 ml-4 lg:ml-8">
               <button
                 onClick={() => setCurrentView('planning')}
-                className={`px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                className={`px-3 lg:px-4 py-2 rounded-lg transition-all text-sm lg:text-base font-medium transform hover:scale-105 active:scale-95 ${
                   currentView === 'planning' 
-                    ? 'bg-studio-accent text-white' 
-                    : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'
+                    ? 'bg-studio-accent text-white shadow-lg' 
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
                 }`}
               >
                 <Calendar className="w-4 h-4 inline mr-2" />
-                Planning
+                <span className="hidden lg:inline">Planning</span>
+                <span className="lg:hidden">Plan</span>
               </button>
               <button
                 onClick={() => setCurrentView('scouting')}
-                className={`px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                className={`px-3 lg:px-4 py-2 rounded-lg transition-all text-sm lg:text-base font-medium transform hover:scale-105 active:scale-95 ${
                   currentView === 'scouting' 
-                    ? 'bg-studio-accent text-white' 
-                    : 'bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white'
+                    ? 'bg-studio-accent text-white shadow-lg' 
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white'
                 }`}
               >
                 <Camera className="w-4 h-4 inline mr-2" />
-                Repérages
+                <span className="hidden lg:inline">Repérages</span>
+                <span className="lg:hidden">Photos</span>
               </button>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <button
               onClick={() => setShowDateConfig(!showDateConfig)}
-              className="hidden lg:flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
+              className="hidden lg:flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 text-white px-3 lg:px-4 py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md"
             >
               <Calendar className="w-4 h-4" />
-              Dates
+              <span className="hidden xl:inline">Configurer dates</span>
+              <span className="xl:hidden">Dates</span>
             </button>
             <button
               onClick={() => setBudgetSidebarOpen(!budgetSidebarOpen)}
-              className="hidden lg:flex items-center gap-2 text-sm bg-green-600/20 hover:bg-green-600/30 text-green-400 px-4 py-2 rounded-lg transition-colors border border-green-500/30"
+              className="hidden sm:flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm bg-green-600/20 hover:bg-green-600/30 text-green-400 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 border border-green-500/30 font-medium shadow-md"
             >
-              <DollarSign className="w-4 h-4" />
+              <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span className="hidden sm:inline">Budget</span>
             </button>
             {/* Mobile menu */}
-            <div className="lg:hidden relative">
+            <div className="md:hidden relative">
               <button
                 onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
-                className="text-white hover:text-studio-accent transition-colors"
+                className="text-white hover:text-studio-accent transition-colors p-2 hover:bg-white/10 rounded-lg"
+                aria-label="Menu options"
               >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
               {rightSidebarOpen && (
-                <div className="absolute right-0 top-12 bg-studio-darker border border-white/20 rounded-lg shadow-xl p-2 min-w-[200px] z-50">
+                <div className="absolute right-0 top-12 bg-studio-darker/95 backdrop-blur-lg border border-white/20 rounded-xl shadow-2xl p-2 min-w-[200px] z-50 animate-fadeIn">
                   <button
                     onClick={() => {setCurrentView('planning'); setRightSidebarOpen(false);}}
-                    className={`w-full text-left px-4 py-2 rounded-lg mb-1 ${
-                      currentView === 'planning' ? 'bg-studio-accent text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'
+                    className={`w-full text-left px-4 py-3 rounded-lg mb-1 flex items-center gap-2 transition-all ${
+                      currentView === 'planning' ? 'bg-studio-accent text-white shadow-md' : 'text-gray-300 hover:bg-white/10 hover:text-white'
                     }`}
                   >
-                    <Calendar className="w-4 h-4 inline mr-2" />
-                    Planning
+                    <Calendar className="w-4 h-4" />
+                    <span className="font-medium">Planning</span>
                   </button>
                   <button
                     onClick={() => {setCurrentView('scouting'); setRightSidebarOpen(false);}}
-                    className={`w-full text-left px-4 py-2 rounded-lg mb-1 ${
-                      currentView === 'scouting' ? 'bg-studio-accent text-white' : 'text-gray-400 hover:bg-white/10 hover:text-white'
+                    className={`w-full text-left px-4 py-3 rounded-lg mb-1 flex items-center gap-2 transition-all ${
+                      currentView === 'scouting' ? 'bg-studio-accent text-white shadow-md' : 'text-gray-300 hover:bg-white/10 hover:text-white'
                     }`}
                   >
-                    <Camera className="w-4 h-4 inline mr-2" />
-                    Repérages
+                    <Camera className="w-4 h-4" />
+                    <span className="font-medium">Repérages</span>
+                  </button>
+                  <button
+                    onClick={() => {setShowDateConfig(!showDateConfig); setRightSidebarOpen(false);}}
+                    className="w-full text-left px-4 py-3 rounded-lg mb-1 text-gray-300 hover:bg-white/10 hover:text-white flex items-center gap-2 transition-all"
+                  >
+                    <Calendar className="w-4 h-4" />
+                    <span className="font-medium">Configurer dates</span>
                   </button>
                   <button
                     onClick={() => {setBudgetSidebarOpen(!budgetSidebarOpen); setRightSidebarOpen(false);}}
-                    className="w-full text-left px-4 py-2 rounded-lg text-green-400 hover:bg-white/10"
+                    className="w-full text-left px-4 py-3 rounded-lg text-green-400 hover:bg-green-600/20 flex items-center gap-2 transition-all font-medium"
                   >
-                    <DollarSign className="w-4 h-4 inline mr-2" />
-                    Budget
+                    <DollarSign className="w-4 h-4" />
+                    <span>Budget</span>
                   </button>
                 </div>
               )}
             </div>
             <button
               onClick={onLogout}
-              className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded transition-colors"
+              className="text-xs sm:text-sm bg-red-600/20 hover:bg-red-600/30 text-red-400 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md border border-red-500/30"
             >
-              Déconnexion
+              <span className="hidden sm:inline">Déconnexion</span>
+              <span className="sm:hidden">✕</span>
             </button>
           </div>
         </div>
@@ -1555,33 +1596,33 @@ const Dashboard = ({ onLogout }) => {
 
       {/* Date Configuration Panel */}
       {showDateConfig && (
-        <div className="bg-studio-darker/95 backdrop-blur-lg border-b border-white/10 px-6 py-3">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-300">Date de début :</label>
+        <div className="bg-studio-darker/95 backdrop-blur-lg border-b border-white/10 px-4 sm:px-6 py-3 sm:py-4 shadow-lg animate-fadeIn">
+          <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-3 sm:gap-4 max-w-[2000px] mx-auto">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <label className="text-xs sm:text-sm text-gray-300 font-medium whitespace-nowrap">Date de début :</label>
               <input
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-white/5 border border-white/20 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent"
+                className="w-full sm:w-auto bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent transition-all"
               />
             </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm text-gray-300">Nombre de jours :</label>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <label className="text-xs sm:text-sm text-gray-300 font-medium whitespace-nowrap">Nombre de jours :</label>
               <input
                 type="number"
                 min="1"
                 max="14"
                 value={numDays}
                 onChange={(e) => setNumDays(Math.max(1, Math.min(14, parseInt(e.target.value) || 1)))}
-                className="bg-white/5 border border-white/20 rounded px-3 py-1.5 text-white text-sm w-20 focus:outline-none focus:ring-2 focus:ring-studio-accent"
+                className="w-full sm:w-24 bg-white/5 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-studio-accent focus:border-transparent transition-all"
               />
             </div>
             <button
               onClick={() => setShowDateConfig(false)}
-              className="ml-auto text-sm bg-studio-accent hover:bg-studio-accent-light text-white px-4 py-1.5 rounded transition-colors"
+              className="w-full sm:w-auto sm:ml-auto text-sm bg-studio-accent hover:bg-studio-accent-light text-white px-4 sm:px-6 py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md"
             >
-              OK
+              ✓ Valider
             </button>
           </div>
         </div>
@@ -1602,19 +1643,23 @@ const Dashboard = ({ onLogout }) => {
 
         {/* Main Content Area */}
         {currentView === 'planning' ? (
-          <main className="flex-1 overflow-x-auto overflow-y-hidden p-3">
-            <div className="mb-2">
-              <div className="flex items-center justify-between">
+          <main className="flex-1 overflow-hidden p-3 sm:p-4 lg:p-6">
+            <div className="mb-3 sm:mb-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-base font-bold text-white mb-0.5">Planning</h2>
-                  <p className="text-gray-400 text-xs">Glissez-déposez les tâches entre les jours</p>
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1">
+                    📅 Planning de Production
+                  </h2>
+                  <p className="text-gray-400 text-xs sm:text-sm">
+                    👆 Cliquez sur une tâche pour l'éditer • 🖐️ Glissez-déposez pour réorganiser
+                  </p>
                 </div>
                 <button
                   onClick={() => setShowDateConfig(!showDateConfig)}
-                  className="lg:hidden flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="lg:hidden flex items-center gap-2 text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white px-3 sm:px-4 py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md w-full sm:w-auto justify-center"
                 >
                   <Calendar className="w-4 h-4" />
-                  Configurer les dates
+                  <span>Configurer les dates</span>
                 </button>
               </div>
             </div>
@@ -1625,11 +1670,11 @@ const Dashboard = ({ onLogout }) => {
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="flex gap-2 pb-3">
+            <div className="flex gap-3 sm:gap-4 pb-4 overflow-x-auto scrollbar-thin scrollbar-thumb-studio-accent/50 scrollbar-track-transparent">
               {dates.map((date) => {
                 const dayCards = getCardsForDate(date);
                 return (
-                  <div key={date.toISOString()} className="flex-shrink-0 w-80">
+                  <div key={date.toISOString()} className="flex-shrink-0 w-full sm:w-80 lg:w-96">
                     <DayColumn
                       date={date}
                       cards={dayCards}
@@ -1651,9 +1696,9 @@ const Dashboard = ({ onLogout }) => {
             
             <DragOverlay>
               {activeId ? (
-                <div className="bg-studio-accent/50 backdrop-blur-sm rounded-lg p-4 border-2 border-studio-accent rotate-3 shadow-xl">
-                  <div className="text-white font-bold">
-                    {cards.find(c => c.id === activeId)?.title}
+                <div className="bg-studio-accent/80 backdrop-blur-md rounded-xl p-4 sm:p-5 border-2 border-studio-accent rotate-3 shadow-2xl transform scale-105">
+                  <div className="text-white font-bold text-sm sm:text-base">
+                    🎯 {cards.find(c => c.id === activeId)?.title}
                   </div>
                 </div>
               ) : null}
