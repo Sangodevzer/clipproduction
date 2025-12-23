@@ -1476,24 +1476,31 @@ const Dashboard = ({ onLogout }) => {
       ) : (
         <>
       {/* Header */}
-      <header className="bg-studio-darker/80 backdrop-blur-lg border-b border-white/10 px-3 sm:px-4 lg:px-6 py-3 sm:py-3.5 shadow-lg">
+      <header className="bg-studio-darker/80 backdrop-blur-lg border-b border-white/10 px-2 sm:px-4 lg:px-6 py-2 sm:py-2.5 shadow-lg">
         <div className="flex items-center justify-between max-w-[2000px] mx-auto">
-          <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-            <button
-              onClick={() => setLeftSidebarOpen(!leftSidebarOpen)}
-              className="lg:hidden text-white hover:text-studio-accent transition-colors p-2 hover:bg-white/10 rounded-lg flex-shrink-0"
-              aria-label="Menu"
-            >
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0">
+            {/* Menu burger Besoins (gauche) - seulement sur planning */}
+            {currentView === 'planning' && (
+              <button
+                onClick={() => setLeftSidebarOpen(!leftSidebarOpen)}
+                className="lg:hidden text-white hover:text-studio-accent transition-colors p-1.5 hover:bg-white/10 rounded-lg flex-shrink-0"
+                aria-label="Besoins"
+                title="Besoins"
+              >
+                <Package className="w-5 h-5" />
+              </button>
+            )}
+            
+            {/* Logo */}
+            <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
               <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-studio-accent flex-shrink-0" />
-              <h1 className="text-sm sm:text-lg lg:text-xl font-bold sci-fi-title truncate" data-text="JEUNE PATRON PRODUCTION">
+              <h1 className="text-xs sm:text-lg lg:text-xl font-bold sci-fi-title truncate" data-text="JEUNE PATRON PRODUCTION">
                 <span className="hidden sm:inline">Jeune Patron Production</span>
-                <span className="sm:hidden">JP Production</span>
+                <span className="sm:hidden">JP</span>
               </h1>
             </div>
-            {/* Navigation Tabs */}
+            
+            {/* Navigation Tabs - Desktop */}
             <div className="hidden md:flex items-center gap-2 ml-4 lg:ml-8">
               <button
                 onClick={() => setCurrentView('planning')}
@@ -1521,74 +1528,75 @@ const Dashboard = ({ onLogout }) => {
               </button>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+            {/* Icônes Navigation - Mobile uniquement */}
+            <button
+              onClick={() => setCurrentView('planning')}
+              className={`md:hidden p-2 rounded-lg transition-all transform hover:scale-110 active:scale-95 ${
+                currentView === 'planning' 
+                  ? 'bg-studio-accent text-white shadow-lg' 
+                  : 'bg-white/10 text-gray-400 hover:text-white'
+              }`}
+              aria-label="Planning"
+              title="Planning"
+            >
+              <Calendar className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => setCurrentView('scouting')}
+              className={`md:hidden p-2 rounded-lg transition-all transform hover:scale-110 active:scale-95 ${
+                currentView === 'scouting' 
+                  ? 'bg-studio-accent text-white shadow-lg' 
+                  : 'bg-white/10 text-gray-400 hover:text-white'
+              }`}
+              aria-label="Repérages"
+              title="Repérages"
+            >
+              <Camera className="w-5 h-5" />
+            </button>
+            
+            {/* Budget - Mobile avec icône seulement */}
+            <button
+              onClick={() => setBudgetSidebarOpen(!budgetSidebarOpen)}
+              className="p-2 rounded-lg transition-all transform hover:scale-110 active:scale-95 bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-500/30 shadow-md md:px-3 md:py-1.5 md:gap-1.5"
+              aria-label="Budget"
+              title="Budget"
+            >
+              <DollarSign className="w-4 h-4 md:w-4 md:h-4" />
+              <span className="hidden md:inline text-sm font-medium">Budget</span>
+            </button>
+            
+            {/* Config dates - Desktop */}
             <button
               onClick={() => setShowDateConfig(!showDateConfig)}
-              className="hidden lg:flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 text-white px-3 lg:px-4 py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md"
+              className="hidden lg:flex items-center gap-2 text-sm bg-white/10 hover:bg-white/20 text-white px-3 lg:px-4 py-1.5 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md"
             >
               <Calendar className="w-4 h-4" />
               <span className="hidden xl:inline">Configurer dates</span>
               <span className="xl:hidden">Dates</span>
             </button>
-            <button
-              onClick={() => setBudgetSidebarOpen(!budgetSidebarOpen)}
-              className="hidden sm:flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm bg-green-600/20 hover:bg-green-600/30 text-green-400 px-2 sm:px-3 lg:px-4 py-1.5 sm:py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 border border-green-500/30 font-medium shadow-md"
-            >
-              <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Budget</span>
-            </button>
-            {/* Mobile menu */}
-            <div className="md:hidden relative">
+            
+            {/* Todo - Mobile avec icône seulement */}
+            {currentView === 'planning' && (
               <button
                 onClick={() => setRightSidebarOpen(!rightSidebarOpen)}
-                className="text-white hover:text-studio-accent transition-colors p-2 hover:bg-white/10 rounded-lg"
-                aria-label="Menu options"
+                className="lg:hidden p-2 rounded-lg transition-all transform hover:scale-110 active:scale-95 bg-white/10 hover:bg-white/20 text-white"
+                aria-label="To-Do"
+                title="To-Do"
               >
-                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+                <CheckSquare className="w-5 h-5" />
               </button>
-              {rightSidebarOpen && (
-                <div className="absolute right-0 top-12 bg-studio-darker/95 backdrop-blur-lg border border-white/20 rounded-xl shadow-2xl p-2 min-w-[200px] z-50 animate-fadeIn">
-                  <button
-                    onClick={() => {setCurrentView('planning'); setRightSidebarOpen(false);}}
-                    className={`w-full text-left px-4 py-3 rounded-lg mb-1 flex items-center gap-2 transition-all ${
-                      currentView === 'planning' ? 'bg-studio-accent text-white shadow-md' : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    <Calendar className="w-4 h-4" />
-                    <span className="font-medium">Planning</span>
-                  </button>
-                  <button
-                    onClick={() => {setCurrentView('scouting'); setRightSidebarOpen(false);}}
-                    className={`w-full text-left px-4 py-3 rounded-lg mb-1 flex items-center gap-2 transition-all ${
-                      currentView === 'scouting' ? 'bg-studio-accent text-white shadow-md' : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                    }`}
-                  >
-                    <Camera className="w-4 h-4" />
-                    <span className="font-medium">Repérages</span>
-                  </button>
-                  <button
-                    onClick={() => {setShowDateConfig(!showDateConfig); setRightSidebarOpen(false);}}
-                    className="w-full text-left px-4 py-3 rounded-lg mb-1 text-gray-300 hover:bg-white/10 hover:text-white flex items-center gap-2 transition-all"
-                  >
-                    <Calendar className="w-4 h-4" />
-                    <span className="font-medium">Configurer dates</span>
-                  </button>
-                  <button
-                    onClick={() => {setBudgetSidebarOpen(!budgetSidebarOpen); setRightSidebarOpen(false);}}
-                    className="w-full text-left px-4 py-3 rounded-lg text-green-400 hover:bg-green-600/20 flex items-center gap-2 transition-all font-medium"
-                  >
-                    <DollarSign className="w-4 h-4" />
-                    <span>Budget</span>
-                  </button>
-                </div>
-              )}
-            </div>
+            )}
+            
+            {/* Déconnexion - Réduit */}
             <button
               onClick={onLogout}
-              className="text-xs sm:text-sm bg-red-600/20 hover:bg-red-600/30 text-red-400 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-all transform hover:scale-105 active:scale-95 font-medium shadow-md border border-red-500/30"
+              className="p-1.5 sm:p-2 rounded-lg transition-all transform hover:scale-110 active:scale-95 bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 shadow-md"
+              aria-label="Déconnexion"
+              title="Déconnexion"
             >
-              <span className="hidden sm:inline">Déconnexion</span>
-              <span className="sm:hidden">✕</span>
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
