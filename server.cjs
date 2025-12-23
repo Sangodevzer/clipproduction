@@ -84,15 +84,32 @@ const initDB = async () => {
       );
     `);
     
-    // Migration: Ajouter la colonne category si elle n'existe pas
+    // Migration: Ajouter toutes les colonnes manquantes
     await client.query(`
       DO $$ 
       BEGIN
+        -- Ajouter category si manquante
         IF NOT EXISTS (
           SELECT 1 FROM information_schema.columns 
           WHERE table_name='scouting_photos' AND column_name='category'
         ) THEN
           ALTER TABLE scouting_photos ADD COLUMN category TEXT DEFAULT 'Autres';
+        END IF;
+        
+        -- Ajouter media_type si manquante
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name='scouting_photos' AND column_name='media_type'
+        ) THEN
+          ALTER TABLE scouting_photos ADD COLUMN media_type TEXT DEFAULT 'image';
+        END IF;
+        
+        -- Ajouter scene_number si manquante
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name='scouting_photos' AND column_name='scene_number'
+        ) THEN
+          ALTER TABLE scouting_photos ADD COLUMN scene_number TEXT;
         END IF;
       END $$;
     `);
