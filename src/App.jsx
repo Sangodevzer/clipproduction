@@ -602,6 +602,38 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
   const [showCategoryInput, setShowCategoryInput] = useState(false);
   const [editForm, setEditForm] = useState({ location: '', description: '', sceneNumber: '', category: 'Autres' });
 
+  // Charger les catégories depuis les settings
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const savedCategories = await api.getSetting('scouting_categories');
+        if (savedCategories) {
+          const parsed = JSON.parse(savedCategories);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setCategories(parsed);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading categories:', error);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  // Sauvegarder les catégories dans les settings
+  useEffect(() => {
+    const saveCategories = async () => {
+      try {
+        await api.setSetting('scouting_categories', JSON.stringify(categories));
+      } catch (error) {
+        console.error('Error saving categories:', error);
+      }
+    };
+    if (categories.length > 0) {
+      saveCategories();
+    }
+  }, [categories]);
+
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -1312,8 +1344,8 @@ const Dashboard = ({ onLogout }) => {
 
     loadData();
     
-    // Polling pour rafraîchir les données toutes les 3 secondes
-    const interval = setInterval(loadData, 3000);
+    // Polling pour rafraîchir les données toutes les 10 secondes (au lieu de 3)
+    const interval = setInterval(loadData, 10000);
     return () => clearInterval(interval);
   }, []);
 
