@@ -607,9 +607,11 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     const loadCategories = async () => {
       try {
         const savedCategories = await api.getSetting('scouting_categories');
+        console.log('📂 Catégories chargées depuis DB:', savedCategories);
         if (savedCategories) {
           const parsed = JSON.parse(savedCategories);
           if (Array.isArray(parsed) && parsed.length > 0) {
+            console.log('✅ Application des catégories:', parsed);
             setCategories(parsed);
           }
         }
@@ -619,20 +621,6 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     };
     loadCategories();
   }, []);
-
-  // Sauvegarder les catégories dans les settings
-  useEffect(() => {
-    const saveCategories = async () => {
-      try {
-        await api.setSetting('scouting_categories', JSON.stringify(categories));
-      } catch (error) {
-        console.error('Error saving categories:', error);
-      }
-    };
-    if (categories.length > 0) {
-      saveCategories();
-    }
-  }, [categories]);
 
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -745,6 +733,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     if (newCategory.trim() && !categories.includes(newCategory.trim())) {
       const updatedCategories = [...categories, newCategory.trim()];
       setCategories(updatedCategories);
+      console.log('➕ Sauvegarde nouvelle catégorie:', updatedCategories);
       await api.setSetting('scouting_categories', JSON.stringify(updatedCategories));
       setNewCategory('');
       setShowCategoryInput(false);
@@ -764,6 +753,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     
     const updatedCategories = categories.filter(cat => cat !== categoryToDelete);
     setCategories(updatedCategories);
+    console.log('🗑️ Sauvegarde après suppression:', updatedCategories);
     await api.setSetting('scouting_categories', JSON.stringify(updatedCategories));
     if (selectedCategory === categoryToDelete) {
       setSelectedCategory('Tous');
