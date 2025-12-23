@@ -168,5 +168,14 @@ export const api = {
       method: 'DELETE'
     });
     return response.json();
+  },
+
+  async reorderScoutingPhotos(photoIds) {
+    const response = await fetch(`${API_URL}/api/scouting/photos/reorder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ photoIds })
+    });
+    return response.json();
   }
 };

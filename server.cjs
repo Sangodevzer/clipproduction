@@ -111,6 +111,14 @@ const initDB = async () => {
         ) THEN
           ALTER TABLE scouting_photos ADD COLUMN scene_number TEXT;
         END IF;
+        
+        -- Ajouter display_order si manquante
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name='scouting_photos' AND column_name='display_order'
+        ) THEN
+          ALTER TABLE scouting_photos ADD COLUMN display_order INTEGER DEFAULT 0;
+        END IF;
       END $$;
     `);
     
@@ -366,7 +374,7 @@ app.delete('/api/budget/expenses/:id', async (req, res) => {
 // Scouting Photos
 app.get('/api/scouting/photos', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM scouting_photos ORDER BY upload_date DESC, created_at DESC');
+    const result = await pool.query('SELECT * FROM scouting_photos ORDER BY display_order ASC, upload_date DESC, created_at DESC');
     const photos = result.rows.map(row => ({
       id: row.id,
       imageData: row.image_data,
@@ -375,7 +383,8 @@ app.get('/api/scouting/photos', async (req, res) => {
       sceneNumber: row.scene_number,
       category: row.category,
       mediaType: row.media_type,
-      uploadDate: row.upload_date
+      uploadDate: row.upload_date,
+      displayOrder: row.display_order || 0
     }));
     res.json(photos);
   } catch (err) {
@@ -422,6 +431,22 @@ app.delete('/api/scouting/photos/:id', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Reorder scouting photos
+app.post('/api/scouting/photos/reorder', async (req, res) => {
+  const { photoIds } = req.body;
+  try {
+    // Mettre à jour l'ordre de chaque photo
+    const promises = photoIds.map((id, index) => 
+      pool.query('UPDATE scouting_photos SET display_order = $1 WHERE id = $2', [index, id])
+    );
+    await Promise.all(promises);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error reordering photos:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });

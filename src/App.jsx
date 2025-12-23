@@ -610,32 +610,32 @@ const SortablePhoto = ({ photo, onSelect, onEdit, onDelete, editingPhoto, editFo
 
   return (
     <div ref={setNodeRef} style={style} className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 hover:border-studio-accent/50 transition-all group">
-      <div className="relative aspect-video bg-black/50">
-        <div {...attributes} {...listeners} className="absolute top-2 left-2 z-10 cursor-move bg-black/70 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+      <div {...attributes} {...listeners} className="relative aspect-video bg-black/50 cursor-grab active:cursor-grabbing">
+        <div className="absolute top-2 left-2 z-10 bg-black/70 p-1.5 rounded opacity-0 lg:group-hover:opacity-100 transition-opacity pointer-events-none">
           <GripVertical className="w-4 h-4 text-white" />
         </div>
-        <div className="cursor-pointer" onClick={() => onSelect(photo)}>
-          {photo.mediaType === 'video' ? (
-            <>
-              <video 
-                src={photo.imageData} 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
-                <Camera className="w-3 h-3" />
-                Vidéo
-              </div>
-            </>
-          ) : (
-            <img 
+        {photo.mediaType === 'video' ? (
+          <>
+            <video 
               src={photo.imageData} 
-              alt={photo.location || 'Repérage'}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover pointer-events-none"
             />
-          )}
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <ZoomIn className="w-8 h-8 text-white" />
-          </div>
+            <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+              <Camera className="w-3 h-3" />
+              Vidéo
+            </div>
+          </>
+        ) : (
+          <img 
+            src={photo.imageData} 
+            alt={photo.location || 'Repérage'}
+            className="w-full h-full object-cover pointer-events-none"
+          />
+        )}
+        <div 
+          className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none"
+        >
+          <ZoomIn className="w-8 h-8 text-white" />
         </div>
       </div>
       
@@ -709,6 +709,13 @@ const SortablePhoto = ({ photo, onSelect, onEdit, onDelete, editingPhoto, editFo
             </div>
           </div>
           <div className="flex gap-2 mt-3">
+            <button
+              onClick={() => onSelect(photo)}
+              className="flex-1 bg-studio-accent/20 hover:bg-studio-accent/30 text-studio-accent px-3 py-1.5 rounded text-xs flex items-center justify-center gap-1"
+            >
+              <ZoomIn className="w-3 h-3" />
+              Voir
+            </button>
             <button
               onClick={() => {
                 onEdit(photo.id);
@@ -1653,7 +1660,7 @@ const Dashboard = ({ onLogout }) => {
     await api.updateScoutingPhoto(id, updatedPhoto);
   };
 
-  const reorderScoutingPhotos = (reorderedPhotos, originalFiltered) => {
+  const reorderScoutingPhotos = async (reorderedPhotos, originalFiltered) => {
     // Créer une copie de toutes les photos
     const allPhotos = [...scoutingPhotos];
     
@@ -1671,6 +1678,13 @@ const Dashboard = ({ onLogout }) => {
     const finalPhotos = [...reorderedPhotos, ...notInFiltered];
     
     setScoutingPhotos(finalPhotos);
+    
+    // Sauvegarder l'ordre en base de données
+    try {
+      await api.reorderScoutingPhotos(finalPhotos.map(p => p.id));
+    } catch (error) {
+      console.error('Erreur sauvegarde ordre photos:', error);
+    }
   };
 
   const handleDragStart = (event) => {
