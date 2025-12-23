@@ -803,7 +803,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
               <div key={cat} className="relative group">
                 <button
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                  className={`px-3 py-1.5 pr-8 rounded-lg text-sm transition-all ${
                     selectedCategory === cat
                       ? 'bg-studio-accent text-white'
                       : 'bg-white/10 text-gray-300 hover:bg-white/20'
@@ -819,7 +819,7 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
                         deleteCategory(cat);
                       }
                     }}
-                    className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-xs hover:bg-red-600"
+                    className="absolute top-1/2 -translate-y-1/2 right-1 bg-red-500/80 lg:bg-red-500 text-white rounded-full w-4 h-4 lg:w-5 lg:h-5 flex items-center justify-center lg:opacity-0 lg:group-hover:opacity-100 transition-opacity text-[10px] lg:text-xs hover:bg-red-600"
                     title="Supprimer la catégorie"
                   >
                     ✕
