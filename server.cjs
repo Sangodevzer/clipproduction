@@ -83,7 +83,21 @@ const initDB = async () => {
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
-    console.log('Database initialized');
+    
+    // Migration: Ajouter la colonne category si elle n'existe pas
+    await client.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name='scouting_photos' AND column_name='category'
+        ) THEN
+          ALTER TABLE scouting_photos ADD COLUMN category TEXT DEFAULT 'Autres';
+        END IF;
+      END $$;
+    `);
+    
+    console.log('Database initialized and migrated');
   } catch (err) {
     console.error('Database initialization error:', err);
   } finally {
