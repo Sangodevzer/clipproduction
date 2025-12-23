@@ -741,15 +741,17 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
     }
   };
 
-  const addCategory = () => {
+  const addCategory = async () => {
     if (newCategory.trim() && !categories.includes(newCategory.trim())) {
-      setCategories([...categories, newCategory.trim()]);
+      const updatedCategories = [...categories, newCategory.trim()];
+      setCategories(updatedCategories);
+      await api.setSetting('scouting_categories', JSON.stringify(updatedCategories));
       setNewCategory('');
       setShowCategoryInput(false);
     }
   };
 
-  const deleteCategory = (categoryToDelete) => {
+  const deleteCategory = async (categoryToDelete) => {
     if (categories.length <= 1) return; // Garder au moins une catégorie
     if (categoryToDelete === 'Autres') return; // Ne pas supprimer la catégorie par défaut
     
@@ -760,7 +762,9 @@ const ScoutingPage = ({ photos, onAddPhoto, onDeletePhoto, onUpdatePhoto }) => {
       }
     });
     
-    setCategories(categories.filter(cat => cat !== categoryToDelete));
+    const updatedCategories = categories.filter(cat => cat !== categoryToDelete);
+    setCategories(updatedCategories);
+    await api.setSetting('scouting_categories', JSON.stringify(updatedCategories));
     if (selectedCategory === categoryToDelete) {
       setSelectedCategory('Tous');
     }
